@@ -3,7 +3,7 @@ const { gql } = require('apollo-server');
 const typeDefs = gql`
     type Entity {
         identifier: ID!
-        name(language: Languages): String
+        name: String
         description: String
         isA: Subject
         isPartOf: Entity
@@ -37,8 +37,8 @@ const typeDefs = gql`
         ar
     }
     type Query {
-        entities: [Entity]
-        entitiy(identifier: ID!): Entity 
+       
+        entity(id: ID!): Entity 
     }
 `;
 
