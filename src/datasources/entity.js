@@ -14,10 +14,9 @@ class EntityAPI extends RESTDataSource {
         };
     }
 
-    async getEntityById({ eId }) {
-        // something goes wrong when destructuring the parameter object...
-        const response = await this.get(`entity/${eId}` , {live: false} );
-        return this.entityReducer(response[0])
+    async getEntityById({ entityId }) {
+        const response = await this.get(`entity/${entityId}` , {live: false} );
+        return this.entityReducer(response)
     }
 }
 
