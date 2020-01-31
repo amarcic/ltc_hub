@@ -15,9 +15,10 @@ const typeDefs = gql`
         title: String
     }
     type Place {
-        URID: ID!
-        titles(language: Languages): String
-        location: String
+        identifier: ID!
+        name: String
+        coordinates: String
+
     }
     type Title{
         language: Languages
@@ -37,8 +38,8 @@ const typeDefs = gql`
         ar
     }
     type Query {
-       
         entity(id: ID!): Entity 
+        place(id: ID!): Place
     }
 `;
 
