@@ -7,7 +7,7 @@ const typeDefs = gql`
         description: String
         isA: Subject
         isPartOf: Entity
-        spacial: Place
+        spatial: Place
         temporal: Period
     }
     type Subject {
@@ -39,7 +39,9 @@ const typeDefs = gql`
     }
     type Query {
         entity(id: ID!): Entity 
+        entities: [Entity]! 
         place(id: ID!): Place
+        places: [Place]!
     }
 `;
 

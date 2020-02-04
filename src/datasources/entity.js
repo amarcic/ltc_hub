@@ -9,9 +9,15 @@ class EntityAPI extends RESTDataSource {
     entityReducer(entity) {
         return{
             identifier: entity.entityId,
-            name: entity.title
+            name: entity.title,
+            places: entity.places[0].gazetteerId
 
         };
+    }
+
+    async getAllEntities() {
+        const response = await this.get( "", {q: "*"});
+        //return this.;
     }
 
     async getEntityById({ entityId }) {
