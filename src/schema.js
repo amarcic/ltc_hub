@@ -39,7 +39,7 @@ const typeDefs = gql`
     }
     type Query {
         entity(id: ID!): Entity 
-        entities: [Entity]! 
+        entities(ids: [ID]!): [Entity]! 
         place(id: ID!): Place
         places: [Place]!
     }

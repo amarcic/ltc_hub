@@ -15,14 +15,22 @@ class EntityAPI extends RESTDataSource {
         };
     }
 
+    /*
     async getAllEntities() {
         const response = await this.get( "", {q: "*"});
-        //return this.;
     }
+
+     */
 
     async getEntityById({ entityId }) {
         const response = await this.get(`entity/${entityId}` , {live: false} );
         return this.entityReducer(response);
+    }
+
+    getEntitiesById({ entityIds }) {
+        return Promise.all(
+            entityIds.map( entityId => this.getEntityById({ entityId }))
+        );
     }
 }
 
