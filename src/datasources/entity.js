@@ -32,6 +32,10 @@ class EntityAPI extends RESTDataSource {
             entityIds.map( entityId => this.getEntityById({ entityId }))
         );
     }
+    /* cannot access index to look up entities by iDAI.gazetteer ids
+    getEntitiesByLocationId({ locationId }) {
+
+    }*/
 }
 
 module.exports = EntityAPI;
