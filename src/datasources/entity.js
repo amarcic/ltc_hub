@@ -32,10 +32,14 @@ class EntityAPI extends RESTDataSource {
             entityIds.map( entityId => this.getEntityById({ entityId }))
         );
     }
-    /* cannot access index to look up entities by iDAI.gazetteer ids
-    getEntitiesByLocationId({ locationId }) {
 
-    }*/
+    async getEntitiesByLocationId({ locationId }) {
+        const response = await this.get(`search`, {q: `places.gazetteerId:${locationId}` });
+        //the following uncanny code works because when destructuring the entity passed to getEntityById
+        //there actually is a key "entityId" on the passed object
+        //return response.entities.map( entity => this.getEntityById( entity ) )
+        return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId }) );
+    }
 }
 
 module.exports = EntityAPI;
