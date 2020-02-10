@@ -41,6 +41,7 @@ const typeDefs = gql`
         entity(id: ID!): Entity 
         entities(ids: [ID]!): [Entity]!
         locatedEntities(id: ID!): [Entity]!
+        EntitiesByLocations(ids: [ID]!): [[Entity]]!
         place(id: ID!): Place
         places: [Place]!
     }
