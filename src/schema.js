@@ -26,7 +26,7 @@ const typeDefs = gql`
         label: String 
     }
     type Period {
-        URID: ID!
+        identifier: ID!
         title(language: Languages): String
         begin: String
         end: String

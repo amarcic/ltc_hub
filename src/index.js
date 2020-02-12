@@ -5,6 +5,7 @@ const resolvers = require('./resolvers');
 const EntityAPI = require('./datasources/entity');
 const PlaceAPI = require('./datasources/place');
 const SubjectAPI = require('./datasources/subject');
+const PeriodAPI = require('./datasources/period');
 
 const server = new ApolloServer({
     typeDefs,
@@ -12,7 +13,8 @@ const server = new ApolloServer({
     dataSources: () => ({
         entityAPI: new EntityAPI(),
         placeAPI: new PlaceAPI(),
-        subjectAPI: new SubjectAPI()
+        subjectAPI: new SubjectAPI(),
+        periodAPI: new PeriodAPI()
     })
 });
 
