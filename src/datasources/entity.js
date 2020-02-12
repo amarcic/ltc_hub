@@ -3,7 +3,7 @@ const { RESTDataSource } = require('apollo-datasource-rest');
 class EntityAPI extends RESTDataSource {
     constructor() {
         super();
-    this.baseURL = 'https://arachne.dainst.org/data/';
+        this.baseURL = 'https://arachne.dainst.org/data/';
     }
 
     entityReducer(entity) {
@@ -35,7 +35,7 @@ class EntityAPI extends RESTDataSource {
         return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId }) );
     }
 
-    // when accessing the spatial property of the entities an error occurs
+    // for some gazetteer Ids: when accessing the spatial property of the entities an error occurs
     getEntitiesByLocationIds({ locationIds }) {
         return Promise.all(
             locationIds.map( locationId => this.getEntitiesByLocationId({ locationId }) )

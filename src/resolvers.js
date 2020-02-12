@@ -13,6 +13,10 @@ module.exports = {
     },
     Entity: {
         spatial: ( entity, _, {dataSources}) =>
-            dataSources.placeAPI.getPlaceById({ placeId: entity.places })
+            dataSources.placeAPI.getPlaceById({ placeId: entity.places }),
+        isA: ( entity, _, {dataSources}) =>
+            //ids of subjects/thesaurus concepts are not found in iDAI.objects data sets, so they cannot be passed to the subject API
+            // replace the hardcoded ID below later
+            dataSources.subjectAPI.getSubjectById({ subjectId: "_8bca4bf1"})
     }
 }

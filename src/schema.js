@@ -7,11 +7,12 @@ const typeDefs = gql`
         description: String
         isA: Subject
         isPartOf: Entity
+        related: [Entity]
         spatial: Place
         temporal: Period
     }
     type Subject {
-        URID: ID!
+        identifier: ID!
         title: String
     }
     type Place {
