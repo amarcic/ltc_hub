@@ -6,19 +6,19 @@ class PeriodAPI extends RESTDataSource {
         this.baseURL = 'http://chronontology.dainst.org/data/';
     }
 
-    periodReducer( period ) {
+    periodReducer( period, { language } ) {
         return {
             identifier: period.resource.id,
             //later map the whole array not just the first element
-            title: period.resource.names.de[0],
+            title: period.resource.names[language][0],
             begin: period.resource.hasTimespan[0].begin.at,
             end: period.resource.hasTimespan[0].end.at
         }
     }
 
-    async getPeriodId({ periodId }) {
+    async getPeriodById({ periodId, language }) {
         const response = await this.get(`period/${ periodId }` );
-        return this.periodReducer(response);
+        return this.periodReducer(response, { language });
     }
 }
 

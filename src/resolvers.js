@@ -18,8 +18,10 @@ module.exports = {
             //ids of subjects/thesaurus concepts are not found in iDAI.objects data sets, so they cannot be passed to the subject API
             // replace the hardcoded ID below later
             dataSources.subjectAPI.getSubjectById({ subjectId: "_8bca4bf1"}),
-        temporal: ( entity, _, {dataSources}) =>
+        temporal: ( entity, { language }, {dataSources}) =>
             //chronontology ID is fixed for now since iDAI.objects has no IDs, just period names
-            dataSources.periodAPI.getPeriodId({ periodId: "pWTRfQzFdKi9" })
+            dataSources.periodAPI.getPeriodById({ periodId: "pWTRfQzFdKi9", language: language? language : "de" }),
+        related: ( entity, _, {dataSources}) =>
+            dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities })
     }
 }

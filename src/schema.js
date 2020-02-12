@@ -9,7 +9,7 @@ const typeDefs = gql`
         isPartOf: Entity
         related: [Entity]
         spatial: Place
-        temporal: Period
+        temporal(language: Languages): Period
     }
     type Subject {
         identifier: ID!
@@ -27,7 +27,7 @@ const typeDefs = gql`
     }
     type Period {
         identifier: ID!
-        title(language: Languages): String
+        title: String
         begin: String
         end: String
     }

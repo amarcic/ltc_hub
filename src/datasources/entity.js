@@ -10,13 +10,13 @@ class EntityAPI extends RESTDataSource {
         return{
             identifier: entity.entityId,
             name: entity.title,
-            places: entity.places[0].gazetteerId
-
+            places: entity.places ? entity.places[0].gazetteerId : "",
+            relatedEntities: entity.connectedEntities
         };
     }
 
     async getEntityById({ entityId }) {
-        const response = await this.get(`entity/${entityId}` , {live: false} );
+        const response = await this.get(`entity/${entityId}` , {live: true} );
         return this.entityReducer(response);
     }
 
