@@ -10,11 +10,15 @@ class PlaceAPI extends RESTDataSource {
         return {
             identifier: place.gazId,
             name: place.prefName.title,
-            coordinates: place.prefLocation.coordinates.join(", ")
+            coordinates: place.prefLocation.coordinates
+                ? place.prefLocation.coordinates.join(", ")
+                : "no coordinates"
         }
     }
 
     async getPlaceById({ placeId }) {
+        //quick fix; implement solid catching; maybe handle by entity type
+        if (!placeId) return;
         //should resolver be changed to connect to actual database and not elasticsearch index?
         const response = await this.get(`doc/${ placeId }.json` );
         return this.placeReducer(response);

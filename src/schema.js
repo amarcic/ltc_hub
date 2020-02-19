@@ -9,7 +9,11 @@ const typeDefs = gql`
         isPartOf: Entity
         related: [Entity]
         spatial: Place
+        """
+        temporal is currently not working because ChronOntology is missing a certificae
+        """
         temporal(language: Languages): Period
+        type: String
     }
     type Subject {
         identifier: ID!

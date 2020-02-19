@@ -11,7 +11,8 @@ class EntityAPI extends RESTDataSource {
             identifier: entity.entityId,
             name: entity.title,
             places: entity.places ? entity.places[0].gazetteerId : "",
-            relatedEntities: entity.connectedEntities
+            relatedEntities: entity.connectedEntities,
+            type: entity.type
         };
     }
 
