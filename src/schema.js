@@ -5,14 +5,22 @@ const typeDefs = gql`
         identifier: ID!
         name: String
         description: String
+        """
+        isA field is currently using the same hard coded ChronOntology id for all queries
+        """
         isA: Subject
         isPartOf: Entity
         related: [Entity]
         spatial: Place
         """
-        temporal is currently not working because ChronOntology is missing a certificae
+        temporal field is currently using the same hard coded ChronOntology id for all queries
         """
         temporal(language: Languages): Period
+        """
+        retrieve period data for Arachne objects from ChronOntology when no ID is given in the data set
+        """
+        temporalArachne: Period
+        periodName: String
         type: String
     }
     type Subject {

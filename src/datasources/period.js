@@ -11,14 +11,21 @@ class PeriodAPI extends RESTDataSource {
             identifier: period.resource.id,
             //later map the whole array not just the first element
             title: period.resource.names[language][0],
-            begin: period.resource.hasTimespan[0].begin.at,
-            end: period.resource.hasTimespan[0].end.at
+            begin: period.resource.hasTimespan ? period.resource.hasTimespan[0].begin.at : "",
+            end: period.resource.hasTimespan ? period.resource.hasTimespan[0].end.at : ""
         }
     }
 
     async getPeriodById({ periodId, language }) {
         const response = await this.get(`period/${ periodId }` );
         return this.periodReducer(response, { language });
+    }
+
+    async getPeriodByNameAndProvenance({ periodName, provenance }) {
+        const response = await this.get(`period/`, { q: periodName});
+        const chronOntolotyId = response.results[0].resource.id;
+        const reresponse = await this.getPeriodById({periodId: chronOntolotyId, language: "de"});
+        return reresponse;
     }
 }
 
