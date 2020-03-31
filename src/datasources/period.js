@@ -22,9 +22,9 @@ class PeriodAPI extends RESTDataSource {
     }
 
     async getPeriodByNameAndProvenance({ periodName, provenance }) {
-        const response = await this.get(`period/`, { q: periodName});
-        const chronOntolotyId = response.results[0].resource.id;
-        const reresponse = await this.getPeriodById({periodId: chronOntolotyId, language: "de"});
+        const response = await this.get(`period/`, { q: periodName, fq: `resource.provenance:${ provenance }`});
+        const chronOntologyId = response.results[0].resource.id;
+        const reresponse = await this.getPeriodById({periodId: chronOntologyId, language: "de"});
         return reresponse;
     }
 }

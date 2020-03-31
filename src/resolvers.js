@@ -22,7 +22,7 @@ module.exports = {
             //chronontology ID is fixed for now since iDAI.objects has no IDs, just period names
             dataSources.periodAPI.getPeriodById({ periodId: "pWTRfQzFdKi9", language: language? language : "de" }),
         temporalArachne: ( entity, _, {dataSources}) =>
-            dataSources.periodAPI.getPeriodByNameAndProvenance({ periodName: entity.periodName }),
+            dataSources.periodAPI.getPeriodByNameAndProvenance({ periodName: entity.periodName, provenance: "Arachne" }),
         related: ( entity, _, {dataSources}) =>
             dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities })
     }
