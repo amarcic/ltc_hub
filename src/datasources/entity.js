@@ -28,8 +28,8 @@ class EntityAPI extends RESTDataSource {
         );
     }
 
-    async getEntitiesByString({ searchString }) {
-        const response = await this.get( 'search', {q: searchString});
+    async getEntitiesByString({ searchString, filter }) {
+        const response = await this.get( 'search', {q: searchString, fq: `facet_bestandsname:"${filter}"`});
         const entityIds = response.entities.map( entity => entity.entityId);
         return this.getEntitiesById( {entityIds} );
     }
