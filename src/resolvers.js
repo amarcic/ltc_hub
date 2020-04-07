@@ -4,9 +4,11 @@ module.exports = {
             dataSources.entityAPI.getEntityById({ entityId: id }),
         entities: (_, { ids }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesById({ entityIds: ids }),
+        entitiesByString: (_, { searchString }, {dataSources}) =>
+            dataSources.entityAPI.getEntitiesByString({ searchString: searchString }),
         locatedEntities: (_, { id }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByLocationId({ locationId: id }),
-        EntitiesByLocations: (_, { ids }, {dataSources}) =>
+        entitiesByLocations: (_, { ids }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByLocationIds({ locationIds: ids }),
         place: (_, { id }, {dataSources}) =>
             dataSources.placeAPI.getPlaceById({ placeId: id })
@@ -22,6 +24,7 @@ module.exports = {
             //chronontology ID is fixed for now since iDAI.objects has no IDs, just period names
             dataSources.periodAPI.getPeriodById({ periodId: "pWTRfQzFdKi9", language: language? language : "de" }),
         temporalArachne: ( entity, _, {dataSources}) =>
+            //limiting provenance to "Arachne" in most cases identifies the iDAI.chronontology periods associated with datings in iDAI.arachne
             dataSources.periodAPI.getPeriodByNameAndProvenance({ periodName: entity.periodName, provenance: "Arachne" }),
         related: ( entity, _, {dataSources}) =>
             dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities })

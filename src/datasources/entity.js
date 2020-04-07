@@ -18,7 +18,7 @@ class EntityAPI extends RESTDataSource {
     }
 
     async getEntityById({ entityId }) {
-        const response = await this.get(`entity/${entityId}` , {live: true} );
+        const response = await this.get(`entity/${entityId}`, {live: true} );
         return this.entityReducer(response);
     }
 
@@ -26,6 +26,12 @@ class EntityAPI extends RESTDataSource {
         return Promise.all(
             entityIds.map( entityId => this.getEntityById({ entityId }) )
         );
+    }
+
+    async getEntitiesByString({ searchString }) {
+        const response = await this.get( 'search', {q: searchString});
+        const entityIds = response.entities.map( entity => entity.entityId);
+        return this.getEntitiesById( {entityIds} );
     }
 
     async getEntitiesByLocationId({ locationId }) {

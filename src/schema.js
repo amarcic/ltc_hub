@@ -53,8 +53,9 @@ const typeDefs = gql`
     type Query {
         entity(id: ID!): Entity 
         entities(ids: [ID]!): [Entity]!
+        entitiesByString(searchString: String): [Entity]
         locatedEntities(id: ID!): [Entity]!
-        EntitiesByLocations(ids: [ID]!): [[Entity]]!
+        entitiesByLocations(ids: [ID]!): [[Entity]]!
         place(id: ID!): Place
         places: [Place]!
     }
