@@ -34,7 +34,7 @@ class EntityAPI extends RESTDataSource {
                             ? filters.map( filter => `facet_bestandsname:"${filter}"` ).join(' OR ')
                             : "";*/
         const params = filters
-                        ? {q: `(${filtersConcat}) AND "${searchString}"` }
+                        ? {q: `"${searchString}" AND (${filtersConcat})` }
                         : {q: searchString};
         const response = await this.get( 'search', params);
         const entityIds = response.size > 0

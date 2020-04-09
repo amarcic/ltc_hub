@@ -10,7 +10,7 @@ class PlaceAPI extends RESTDataSource {
         return {
             identifier: place.gazId,
             name: place.prefName.title,
-            coordinates: place.prefLocation.coordinates
+            coordinates: place.prefLocation && place.prefLocation.coordinates
                 ? place.prefLocation.coordinates.join(", ")
                 : "no coordinates"
         }
