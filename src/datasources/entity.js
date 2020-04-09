@@ -29,9 +29,10 @@ class EntityAPI extends RESTDataSource {
     }
 
     async getEntitiesByString({ searchString, filters }) {
-        const filtersConcat = filters
+        const filtersConcat = filters && filters.map( filter => `facet_bestandsname:"${filter}"` ).join(' OR ');
+        /*filters
                             ? filters.map( filter => `facet_bestandsname:"${filter}"` ).join(' OR ')
-                            : "";
+                            : "";*/
         const params = filters
                         ? {q: `(${filtersConcat}) AND "${searchString}"` }
                         : {q: searchString};
