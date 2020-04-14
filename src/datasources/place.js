@@ -12,7 +12,7 @@ class PlaceAPI extends RESTDataSource {
             name: place.prefName.title,
             coordinates: place.prefLocation && place.prefLocation.coordinates
                 ? place.prefLocation.coordinates.join(", ")
-                : "no coordinates"
+                : "0, 0"
         }
     }
 
