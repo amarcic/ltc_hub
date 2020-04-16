@@ -25,6 +25,7 @@ class PlaceAPI extends RESTDataSource {
     }
 
     getPlacesByIds({ placeIds }) {
+        if (!placeIds) return;
         return Promise.all(
             placeIds.map( placeId => this.getPlaceById({ placeId }) )
         );
