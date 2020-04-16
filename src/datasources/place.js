@@ -23,6 +23,12 @@ class PlaceAPI extends RESTDataSource {
         const response = await this.get(`doc/${ placeId }.json` );
         return this.placeReducer(response);
     }
+
+    getPlacesByIds({ placeIds }) {
+        return Promise.all(
+            placeIds.map( placeId => this.getPlaceById({ placeId }) )
+        );
+    }
 }
 
 module.exports = PlaceAPI;

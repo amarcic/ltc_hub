@@ -10,7 +10,7 @@ class EntityAPI extends RESTDataSource {
         return{
             identifier: entity.entityId,
             name: entity.title,
-            places: entity.places ? entity.places[0].gazetteerId : "",
+            places: entity.places ? entity.places.map( place => place.gazetteerId ): "",
             relatedEntities: entity.connectedEntities,
             type: entity.type,
             periodName: entity.facet_datierungepoche ? entity.facet_datierungepoche[0] : ""
@@ -31,8 +31,8 @@ class EntityAPI extends RESTDataSource {
     async getEntitiesByString({ searchString, filters }) {
         const filtersConcat = filters && filters.map( filter => `facet_bestandsname:${filter}` ).join(' OR ');
         const params = filters && filters.length > 0
-                        ? {q: `${searchString} AND (${filtersConcat})`, limit: 200 }
-                        : {q: searchString, limit: 200};
+                        ? {q: `${searchString} AND (${filtersConcat})`, limit: 200/*, fq: "facet_ortsangabe:Fundort"*/ }
+                        : {q: searchString, limit: 200/*, fq: "facet_ortsangabe:Fundort"*/};
         const response = await this.get( 'search', params );
         const entityIds = response.size > 0
                             ? response.entities.map( entity => entity.entityId)

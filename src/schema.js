@@ -6,15 +6,12 @@ const typeDefs = gql`
         name: String
         description: String
         """
-        isA field is currently using the same hard coded ChronOntology id for all queries
+        isA field is currently using the same hard coded id for all queries
         """
         isA: Subject
         isPartOf: Entity
         related: [Entity]
-        spatial: Place
-        """
-        temporal field is currently using the same hard coded ChronOntology id for all queries
-        """
+        spatial: [Place]
         temporal(language: Languages): Period
         """
         retrieve period data for Arachne objects from ChronOntology when no ID is given in the data set
