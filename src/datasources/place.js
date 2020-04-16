@@ -7,6 +7,7 @@ class PlaceAPI extends RESTDataSource {
     }
 
     placeReducer( place ) {
+        if(!place) return;
         return {
             identifier: place.gazId,
             name: place.prefName.title,
@@ -20,7 +21,7 @@ class PlaceAPI extends RESTDataSource {
         //quick fix; implement solid catching; maybe handle by entity type
         if (!placeId) return;
         //should resolver be changed to connect to actual database and not elasticsearch index?
-        const response = await this.get(`doc/${ placeId }.json` );
+        const response = await this.get(`doc/${ placeId }.json` ).catch((err) => { console.log(err); });
         return this.placeReducer(response);
     }
 
