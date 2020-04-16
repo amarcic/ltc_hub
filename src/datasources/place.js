@@ -10,7 +10,7 @@ class PlaceAPI extends RESTDataSource {
         if(!place) return;
         return {
             identifier: place.gazId,
-            name: place.prefName.title,
+            name: place.prefName&&place.prefName.title ? place.prefName.title : "no name found",
             coordinates: place.prefLocation && place.prefLocation.coordinates
                 ? place.prefLocation.coordinates.join(", ")
                 : "0, 0"
@@ -21,7 +21,9 @@ class PlaceAPI extends RESTDataSource {
         //quick fix; implement solid catching; maybe handle by entity type
         if (!placeId) return;
         //should resolver be changed to connect to actual database and not elasticsearch index?
-        const response = await this.get(`doc/${ placeId }.json` ).catch((err) => { console.log(err); });
+        //one type of error occurs when access to a place is forbidden (because Id is given first, but access denied)
+        //
+        const response = await this.get(`doc/${ placeId }.json` ).catch((err) => { return {gazId: placeId, prefName: {title: "super secret hideout"}} });
         return this.placeReducer(response);
     }
 
