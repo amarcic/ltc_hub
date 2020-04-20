@@ -11,7 +11,7 @@ class EntityAPI extends RESTDataSource {
             identifier: entity.entityId,
             name: entity.title,
             places: entity.places ? entity.places.map( place => place.gazetteerId ): "",
-            relatedEntities: entity.connectedEntities,
+            relatedEntities: entity.connectedEntities ? entity.connectedEntities : "",
             type: entity.type,
             periodName: entity.facet_datierungepoche ? entity.facet_datierungepoche[0] : ""
         };
@@ -23,6 +23,7 @@ class EntityAPI extends RESTDataSource {
     }
 
     getEntitiesById({ entityIds }) {
+        if(!entityIds) return;
         return Promise.all(
             entityIds.map( entityId => this.getEntityById({ entityId }) )
         );
