@@ -10,8 +10,8 @@ const typeDefs = gql`
         """
         isA: Subject
         isPartOf: Entity
-        related: [Entity]
-        spatial: [Place]
+        related(types: [RelatedType]): [Entity]
+        spatial(relation: [SpatialRelations]): [Place]
         temporal(language: Languages): Period
         """
         retrieve period data for Arachne objects from ChronOntology when no ID is given in the data set
@@ -39,6 +39,19 @@ const typeDefs = gql`
         title: String
         begin: String
         end: String
+    }
+    enum SpatialRelations {
+        fundort
+    }
+    enum RelatedType {
+        Einzelobjekte
+        Literatur
+        Orte
+        Sammlungen
+        Inschriften
+        MehrteiligeDenkmaeler
+        Bilder
+        Buchseiten
     }
     enum Languages {
         de

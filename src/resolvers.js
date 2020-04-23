@@ -26,7 +26,7 @@ module.exports = {
         temporalArachne: ( entity, _, {dataSources}) =>
             //limiting provenance to "Arachne" in most cases identifies the iDAI.chronontology periods associated with datings in iDAI.arachne
             dataSources.periodAPI.getPeriodByNameAndProvenance({ periodName: entity.periodName, provenance: "Arachne" }),
-        related: ( entity, _, {dataSources}) =>
-            dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities })
+        related: ( entity, { types }, {dataSources}) =>
+            dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities, types: types })
     }
 }

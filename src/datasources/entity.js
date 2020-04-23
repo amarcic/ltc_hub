@@ -7,6 +7,7 @@ class EntityAPI extends RESTDataSource {
     }
 
     entityReducer(entity) {
+        if(!entity) return;
         return{
             identifier: entity.entityId,
             name: entity.title,
@@ -18,15 +19,23 @@ class EntityAPI extends RESTDataSource {
     }
 
     async getEntityById({ entityId }) {
-        const response = await this.get(`entity/${entityId}`, {live: true} );
+        const response = await this.get(`entity/${entityId}`, {live: true} ).catch(() => {});
         return this.entityReducer(response);
     }
 
-    getEntitiesById({ entityIds }) {
+    getEntitiesById({ entityIds, types }) {
         if(!entityIds) return;
-        return Promise.all(
-            entityIds.map( entityId => this.getEntityById({ entityId }) )
-        );
+        if (types) {
+            return Promise.all(
+                //yes, they are both the same! but here I wanted to map only the ones that have the wanted types
+                //array filter only works synchronous; maybe use reduce
+                entityIds.map( entityId => this.getEntityById({ entityId }) )
+            );
+        } else {
+            return Promise.all(
+                entityIds.map( entityId => this.getEntityById({ entityId }) )
+            );
+        }
     }
 
     async getEntitiesByString({ searchString, filters }) {
