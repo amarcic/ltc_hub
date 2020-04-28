@@ -49,6 +49,9 @@ const typeDefs = gql`
         Orte
         Sammlungen
         Inschriften
+        """
+        the value MehrteiligeDenkmaeler cannot work, since it does not correspond to the value in Arachne; pls decouple
+        """
         MehrteiligeDenkmaeler
         Bilder
         Buchseiten

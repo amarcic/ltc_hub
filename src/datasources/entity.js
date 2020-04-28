@@ -25,12 +25,13 @@ class EntityAPI extends RESTDataSource {
 
     getEntitiesById({ entityIds, types }) {
         if(!entityIds) return;
+        //I don't like this if-else structure; can we simplify it? maybe by giving a default filter that is only replaced by types
         if (types) {
             return Promise.all(
-                //yes, they are both the same! but here I wanted to map only the ones that have the wanted types
-                //array filter only works synchronous; maybe use reduce
+            //for all values in entityIds the corresponding entity is fetched
                 entityIds.map( entityId => this.getEntityById({ entityId }) )
-            );
+            //the mapped array of entities is filtered by the values given in types
+            ).then( values => values.filter( entity => entity&&types.indexOf(entity.type)>-1));
         } else {
             return Promise.all(
                 entityIds.map( entityId => this.getEntityById({ entityId }) )
