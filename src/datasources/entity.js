@@ -90,6 +90,11 @@ class EntityAPI extends RESTDataSource {
             locationIds.map( locationId => this.getEntitiesByLocationId({ locationId }) )
         )
     }
+
+    async getEntitiesByPeriod({ periodTerm }) {
+        const response = await this.get( `search`, {q:'*', fq: `facet_datierungepoche:${periodTerm}`});
+        return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId }) );
+    }
 }
 
 module.exports = EntityAPI;

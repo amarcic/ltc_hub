@@ -81,6 +81,7 @@ const typeDefs = gql`
         entitiesByString(searchString: String, filters: [String]): [Entity]
         locatedEntities(id: ID!): [Entity]!
         entitiesByLocations(ids: [ID]!): [[Entity]]!
+        entitiesByPeriod(periodString: String): [Entity]
         place(id: ID!): Place
         places: [Place]!
     }

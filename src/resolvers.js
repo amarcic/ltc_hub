@@ -10,6 +10,8 @@ module.exports = {
             dataSources.entityAPI.getEntitiesByLocationId({ locationId: id }),
         entitiesByLocations: (_, { ids }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByLocationIds({ locationIds: ids }),
+        entitiesByPeriod: (_, { periodString }, {dataSources}) =>
+            dataSources.entityAPI.getEntitiesByPeriod({ periodTerm: periodString }),
         place: (_, { id }, {dataSources}) =>
             dataSources.placeAPI.getPlaceById({ placeId: id })
     },
