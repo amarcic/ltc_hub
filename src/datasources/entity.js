@@ -1,5 +1,28 @@
 const { RESTDataSource } = require('apollo-datasource-rest');
 
+const valueMapRelatedObjects = {
+    Einzelobjekte: 'Einzelobjekte',
+    MehrteiligeDenkmaeler: 'Mehrteilige Denkmäler',
+    Bauwerke: 'Bauwerke',
+    Bauwerksteile: 'Bauwerksteile',
+    Bilder: 'Bilder',
+    Buecher: 'Bücher',
+    Buchseiten: 'Buchseiten',
+    Einzelmotive: 'Einzelmotive',
+    Gruppierungen: 'Gruppierungen',
+    Inschriften: 'Inschriften',
+    Literatur: 'Literatur',
+    Orte: 'Orte',
+    Reproduktionen: 'Reproduktionen',
+    Personen: 'Personen',
+    Rezeptionen: 'Rezeptionen',
+    Sammlungen: 'Sammlungen',
+    Szenen: 'Szenen',
+    Topographien: 'Topographien',
+    Typen: 'Typen',
+    dreiDModelle: '3D-Modelle'
+}
+
 class EntityAPI extends RESTDataSource {
     constructor() {
         super();
@@ -27,11 +50,12 @@ class EntityAPI extends RESTDataSource {
         if(!entityIds) return;
         //I don't like this if-else structure; can we simplify it? maybe by giving a default filter that is only replaced by types
         if (types) {
+            const arachneTypes = types.map( type => valueMapRelatedObjects[type]);
             return Promise.all(
             //for all values in entityIds the corresponding entity is fetched
                 entityIds.map( entityId => this.getEntityById({ entityId }) )
             //the mapped array of entities is filtered by the values given in types
-            ).then( values => values.filter( entity => entity&&types.indexOf(entity.type)>-1));
+            ).then( values => values.filter( entity => entity&&arachneTypes.indexOf(entity.type)>-1));
         } else {
             return Promise.all(
                 entityIds.map( entityId => this.getEntityById({ entityId }) )

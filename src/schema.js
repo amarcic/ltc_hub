@@ -45,14 +45,10 @@ const typeDefs = gql`
     }
     enum RelatedType {
         Einzelobjekte
-        """
-        the value MehrteiligeDenkmaeler cannot work, since it does not correspond to the value in Arachne; pls decouple
-        """
         MehrteiligeDenkmaeler
         Bauwerke
         Bauwerksteile
         Bilder
-        """Buecher does not work: umlaut"""
         Buecher
         Buchseiten
         Einzelmotive
@@ -67,7 +63,6 @@ const typeDefs = gql`
         Szenen
         Topographien
         Typen
-        """3d modelle not accessible because value differs from arachne"""
         dreiDModelle
     }
     enum Languages {
