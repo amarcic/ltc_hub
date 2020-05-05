@@ -7,6 +7,7 @@ class PeriodAPI extends RESTDataSource {
     }
 
     periodReducer( period, { language } ) {
+        //if(!period||!period.resource) return;
         return {
             identifier: period.resource.id,
             //later map the whole array not just the first element
@@ -23,7 +24,10 @@ class PeriodAPI extends RESTDataSource {
 
     async getPeriodByNameAndProvenance({ periodName, provenance }) {
         const response = await this.get(`period/`, { q: periodName, fq: `resource.provenance:${ provenance }`});
-        const chronOntologyId = response.results[0].resource.id;
+        //results[0] only since it should be the first result when looking for relations between Arachne and ChronOntology
+        const chronOntologyId = response.results[0]//&&response.results[0].resource
+                                    ? response.results[0].resource.id
+                                    : "";
         const reresponse = await this.getPeriodById({periodId: chronOntologyId, language: "de"});
         return reresponse;
     }

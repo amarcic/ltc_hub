@@ -93,6 +93,7 @@ class EntityAPI extends RESTDataSource {
 
     async getEntitiesByPeriod({ periodTerm }) {
         const response = await this.get( `search`, {q:'*', fq: `facet_datierungepoche:${periodTerm}`});
+        if(response.entities===undefined) return;
         return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId }) );
     }
 }
