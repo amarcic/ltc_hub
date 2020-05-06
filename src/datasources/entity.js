@@ -75,6 +75,26 @@ class EntityAPI extends RESTDataSource {
         return this.getEntitiesById( {entityIds} );
     }
 
+    async getFilteredEntities({ searchString, coordinates, period, projects }) {
+        const projectsConcat = projects
+                                ? ` AND ` + projects.map( project => `facet_bestandsname:${project}` ).join(' OR ')
+                                : "";
+        const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
+        //const period = period && `facet_datierungsepoche:${period}`;
+        let params = {
+            q: `${searchString} ${projectsConcat}`,
+            //bbox: coordinates,
+            //fq: `facet_datierungepoche:${period}`
+        }
+        if(coordinates) params['bbox']= coordinates;
+        if(period) params['fq']= `facet_datierungepoche:${period}`;
+        const response = await this.get( 'search', params);
+        const entityIds = response.size > 0
+            ? response.entities.map( entity => entity.entityId)
+            : [];
+        return this.getEntitiesById( {entityIds} );
+    }
+
     async getEntitiesByLocationId({ locationId }) {
         const response = await this.get(`search`, {q: `places.gazetteerId:${locationId}` });
         //the following uncanny code works because when destructuring the entity passed to getEntityById
@@ -92,7 +112,7 @@ class EntityAPI extends RESTDataSource {
     }
 
     async getEntitiesByCoordinates({ coordinates }) {
-        const response = await this.get(`search`, {q:'*', bbox: coordinates});
+        const response = await this.get(`search`, {q:'*', bbox: coordinates.join(', ')});
         return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId }) );
     }
 
