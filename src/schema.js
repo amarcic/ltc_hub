@@ -82,6 +82,7 @@ const typeDefs = gql`
         locatedEntities(id: ID!): [Entity]!
         entitiesByLocations(ids: [ID]!): [[Entity]]!
         entitiesByPeriod(periodString: String): [Entity]
+        entitiesByCoordinates(coordinates: [Float]): [Entity]
         place(id: ID!): Place
         places: [Place]!
     }
