@@ -10,6 +10,20 @@ module.exports = {
             dataSources.entityAPI.getFilteredEntities({ searchString: searchString, period: period, coordinates: coordinates, projects: projects }),
         locatedEntities: (_, { id }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByLocationId({ locationId: id }),
+        nestedLocatedEntities: (_, { id }, {dataSources}) => {
+            const dive = ( ids ) => {
+                const places = dataSources.placeAPI.getPlacesByIds({ placeIds: ids });
+                //how did I manage to forget the reduce?
+                places&&places.places&&places.places.forEach( place =>
+                    {
+                        //since I am getting Place-type results, it does not have "ancestors" -> this is never true
+                        if(place&&place.ancestors&&place.ancestors.length>0) dive(place.ancestors.map( ancestor => ancestor.slice(35)));
+                        else return place;
+                    }
+                );
+            }
+            return results = dive([id]);
+        },
         entitiesByLocations: (_, { ids }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByLocationIds({ locationIds: ids }),
         entitiesByPeriod: (_, { periodString }, {dataSources}) =>
@@ -17,7 +31,9 @@ module.exports = {
         entitiesByCoordinates: (_, { coordinates }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByCoordinates({ coordinates: coordinates }),
         place: (_, { id }, {dataSources}) =>
-            dataSources.placeAPI.getPlaceById({ placeId: id })
+            dataSources.placeAPI.getPlaceById({ placeId: id }),
+        places: (_, {ids}, {dataSources}) =>
+            dataSources.placeAPI.getPlacesByIds({placeIds: ids})
     },
     Entity: {
         spatial: ( entity, _, {dataSources}) =>

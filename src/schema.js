@@ -81,11 +81,12 @@ const typeDefs = gql`
         entitiesByString(searchString: String, filters: [String]): [Entity]
         entitiesMultiFilter( searchString: String, coordinates: [Float], projects: [String], period: String ): [Entity]
         locatedEntities(id: ID!): [Entity]!
+        nestedLocatedEntities(id: ID!): [Place]
         entitiesByLocations(ids: [ID]!): [[Entity]]!
         entitiesByPeriod(periodString: String): [Entity]
         entitiesByCoordinates(coordinates: [Float]): [Entity]
         place(id: ID!): Place
-        places: [Place]!
+        places(ids: [ID]!): [Place]!
     }
 `;
 
