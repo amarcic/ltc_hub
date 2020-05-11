@@ -28,7 +28,8 @@ const typeDefs = gql`
         identifier: ID!
         name: String
         coordinates: String
-
+        fallsIntoPlace: Place
+        containsPlaces: [Place]
     }
     type Title{
         language: Languages

@@ -86,7 +86,7 @@ class EntityAPI extends RESTDataSource {
             //bbox: coordinates,
             //fq: `facet_datierungepoche:${period}`
         }
-        if(coordinates) params['bbox']= coordinates;
+        if(coordinates&&coordinates.length===4) params['bbox']= coordinates;
         if(period) params['fq']= `facet_datierungepoche:${period}`;
         const response = await this.get( 'search', params);
         const entityIds = response.size > 0

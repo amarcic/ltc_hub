@@ -50,5 +50,9 @@ module.exports = {
             dataSources.periodAPI.getPeriodByNameAndProvenance({ periodName: entity.periodName, provenance: "Arachne" }),
         related: ( entity, { types }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities, types: types })
+    },
+    Place: {
+        fallsIntoPlace: ( place, _, {dataSources}) =>
+            dataSources.placeAPI.getPlaceById({placeId: place.identifier})
     }
 }
