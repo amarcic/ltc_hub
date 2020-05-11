@@ -76,18 +76,19 @@ class EntityAPI extends RESTDataSource {
     }
 
     async getFilteredEntities({ searchString, coordinates, period, projects }) {
-        const projectsConcat = projects
+        const searchStr = searchString&&searchString!=="" ? searchString: '*';
+        const projectsConcat = projects && projects.length>0
                                 ? ` AND ` + projects.map( project => `facet_bestandsname:${project}` ).join(' OR ')
                                 : "";
         const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
         //const period = period && `facet_datierungsepoche:${period}`;
         let params = {
-            q: `${searchString} ${projectsConcat}`,
+            q: `${searchStr} ${projectsConcat}`,
             //bbox: coordinates,
             //fq: `facet_datierungepoche:${period}`
         }
         if(coordinates&&coordinates.length===4) params['bbox']= coordinates;
-        if(period) params['fq']= `facet_datierungepoche:${period}`;
+        if(period&&period!=="") params['fq']= `facet_datierungepoche:${period}`;
         const response = await this.get( 'search', params);
         const entityIds = response.size > 0
             ? response.entities.map( entity => entity.entityId)
