@@ -81,11 +81,8 @@ class EntityAPI extends RESTDataSource {
                                 ? ` AND ` + projects.map( project => `facet_bestandsname:${project}` ).join(' OR ')
                                 : "";
         const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
-        //const period = period && `facet_datierungsepoche:${period}`;
         let params = {
-            q: `${searchStr} ${projectsConcat}`,
-            //bbox: coordinates,
-            //fq: `facet_datierungepoche:${period}`
+            q: `${searchStr} ${projectsConcat}`
         }
         if(coordinates&&coordinates.length===4) params['bbox']= coordinates;
         if(period&&period!=="") params['fq']= `facet_datierungepoche:${period}`;

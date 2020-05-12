@@ -11,6 +11,8 @@ class PlaceAPI extends RESTDataSource {
         return {
             identifier: place.gazId,
             name: place.prefName&&place.prefName.title ? place.prefName.title : "no name found",
+            parentId: place.parent && place.parent.slice(35),
+            ancestorIds: place.ancestors && place.ancestors.map( ancestor => ancestor.slice(35)),
             coordinates: place.prefLocation && place.prefLocation.coordinates
                 ? place.prefLocation.coordinates.join(", ")
                 : "0, 0"
@@ -18,11 +20,7 @@ class PlaceAPI extends RESTDataSource {
     }
 
     async getPlaceById({ placeId }) {
-        //quick fix; implement solid catching; maybe handle by entity type
         if (!placeId) return;
-        //should resolver be changed to connect to actual database and not elasticsearch index?
-        //one type of error occurs when access to a place is forbidden (because Id is given first, but access denied)
-        //
         const response = await this.get(`doc/${ placeId }.json` ).catch((err) => { return {gazId: placeId, prefName: {title: "super secret hideout"}} });
         return this.placeReducer(response);
     }
@@ -32,6 +30,12 @@ class PlaceAPI extends RESTDataSource {
         return Promise.all(
             placeIds.map( placeId => this.getPlaceById({ placeId }) )
         );
+    }
+
+    async fetchChildren({ parentPlaceId}) {
+        if (!parentPlaceId) return;
+        const response = await this.get( 'search.json', {q: `parent:${parentPlaceId}`});
+        return response.result.map( place => this.placeReducer(place));
     }
 }
 

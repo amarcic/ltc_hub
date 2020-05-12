@@ -53,6 +53,11 @@ module.exports = {
     },
     Place: {
         fallsIntoPlace: ( place, _, {dataSources}) =>
-            dataSources.placeAPI.getPlaceById({placeId: place.identifier})
+            dataSources.placeAPI.getPlaceById({placeId: place.parentId}),
+        locatedInPlaces: (place, _, {dataSources}) =>
+            dataSources.placeAPI.getPlacesByIds({ placeIds: place.ancestorIds }),
+        containsPlaces: ( place, _, {dataSources}) =>
+            dataSources.placeAPI.fetchChildren({ parentPlaceId: place.identifier})
+
     }
 }
