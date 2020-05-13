@@ -10,20 +10,6 @@ module.exports = {
             dataSources.entityAPI.getFilteredEntities({ searchString: searchString, period: period, coordinates: coordinates, projects: projects }),
         locatedEntities: (_, { id }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByLocationId({ locationId: id }),
-        nestedLocatedEntities: (_, { id }, {dataSources}) => {
-            const dive = ( ids ) => {
-                const places = dataSources.placeAPI.getPlacesByIds({ placeIds: ids });
-                //how did I manage to forget the reduce?
-                places&&places.places&&places.places.forEach( place =>
-                    {
-                        //since I am getting Place-type results, it does not have "ancestors" -> this is never true
-                        if(place&&place.ancestors&&place.ancestors.length>0) dive(place.ancestors.map( ancestor => ancestor.slice(35)));
-                        else return place;
-                    }
-                );
-            }
-            return results = dive([id]);
-        },
         entitiesByLocations: (_, { ids }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByLocationIds({ locationIds: ids }),
         entitiesByPeriod: (_, { periodString }, {dataSources}) =>
@@ -36,8 +22,8 @@ module.exports = {
             dataSources.placeAPI.getPlacesByIds({placeIds: ids})
     },
     Entity: {
-        spatial: ( entity, _, {dataSources}) =>
-            dataSources.placeAPI.getPlacesByIds({ placeIds: entity.places }),
+        spatial: ( entity, { relations }, {dataSources}) =>
+            dataSources.placeAPI.getPlacesByIdAndType({ placeInfo: entity.places, relationTypes: relations }),
         isA: ( entity, _, {dataSources}) =>
             //ids of subjects/thesaurus concepts are not found in iDAI.objects data sets, so they cannot be passed to the subject API
             // replace the hardcoded ID below later

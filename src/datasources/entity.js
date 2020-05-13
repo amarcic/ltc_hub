@@ -34,7 +34,13 @@ class EntityAPI extends RESTDataSource {
         return{
             identifier: entity.entityId,
             name: entity.title,
-            places: entity.places ? entity.places.map( place => place.gazetteerId ): "",
+            places: entity.places
+                ? entity.places.map( place => {
+                    return{
+                        placeId: place.gazetteerId,
+                        locationType: "Aufbewahrungsort"}
+                    } )
+                : "",
             relatedEntities: entity.connectedEntities ? entity.connectedEntities : "",
             type: entity.type,
             periodName: entity.facet_datierungepoche ? entity.facet_datierungepoche[0] : ""
