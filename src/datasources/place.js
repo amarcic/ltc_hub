@@ -35,11 +35,15 @@ class PlaceAPI extends RESTDataSource {
     getPlacesByIdAndType({ placeInfo, relationTypes }) {
         if (!placeInfo) return;
         if (relationTypes) {
-            placeInfo.filter( infoObj => relationTypes.indexOf(infoObj.locationType)>-1 )
-        }
+            const filteredPlaces = placeInfo.filter( infoObj => relationTypes.indexOf(infoObj.locationType)>-1 )
+            return Promise.all(
+                filteredPlaces.map( infoObj => this.getPlaceById({ placeId: infoObj.placeId}))
+            );
+        } else {
         return Promise.all(
             placeInfo.map( infoObj => this.getPlaceById({ placeId: infoObj.placeId}))
         );
+        }
     }
 
     async fetchChildren({ parentPlaceId}) {
