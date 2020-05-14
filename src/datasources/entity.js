@@ -38,8 +38,9 @@ class EntityAPI extends RESTDataSource {
                 ? entity.places.map( place => {
                     return{
                         placeId: place.gazetteerId,
-                        locationType: "Aufbewahrungsort"}
-                    } )
+                        locationType: place.relation
+                    }
+                } )
                 : "",
             relatedEntities: entity.connectedEntities ? entity.connectedEntities : "",
             type: entity.type,
