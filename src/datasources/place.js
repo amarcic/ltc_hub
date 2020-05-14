@@ -35,6 +35,7 @@ class PlaceAPI extends RESTDataSource {
     getPlacesByIdAndType({ placeInfo, relationTypes }) {
         if (!placeInfo) return;
         if (relationTypes) {
+            // if relationTypes are specified, only places of selected relation are returned
             const filteredPlaces = placeInfo.filter( infoObj => relationTypes.indexOf(infoObj.locationType)>-1 )
             return Promise.all(
                 filteredPlaces.map( infoObj => this.getPlaceById({ placeId: infoObj.placeId}))

@@ -45,6 +45,10 @@ const typeDefs = gql`
     enum SpatialRelations {
         Fundort
         Aufbewahrungsort
+        """
+        often a relation between entity and place is not specified; add type "unspecified" to include those places
+        """
+        unspecified
     }
     enum RelatedType {
         Einzelobjekte
