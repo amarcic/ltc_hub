@@ -6,8 +6,8 @@ module.exports = {
             dataSources.entityAPI.getEntitiesById({ entityIds: ids }),
         entitiesByString: (_, { searchString, filters }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByString({ searchString: searchString, filters: filters }),
-        entitiesMultiFilter: (_, { searchString, period, coordinates, projects }, {dataSources}) =>
-            dataSources.entityAPI.getFilteredEntities({ searchString: searchString, period: period, coordinates: coordinates, projects: projects }),
+        entitiesMultiFilter: (_, { searchString, period, coordinates, projects, entityTypes }, {dataSources}) =>
+            dataSources.entityAPI.getFilteredEntities({ searchString: searchString, period: period, coordinates: coordinates, projects: projects, entityTypes: entityTypes }),
         locatedEntities: (_, { id }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByLocationId({ locationId: id }),
         entitiesByLocations: (_, { ids }, {dataSources}) =>

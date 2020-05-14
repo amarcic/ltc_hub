@@ -82,7 +82,7 @@ class EntityAPI extends RESTDataSource {
         return this.getEntitiesById( {entityIds} );
     }
 
-    async getFilteredEntities({ searchString, coordinates, period, projects }) {
+    async getFilteredEntities({ searchString, coordinates, period, projects, entityTypes }) {
         const searchStr = searchString&&searchString!=="" ? searchString: '*';
         const projectsConcat = projects && projects.length>0
                                 ? ` AND ` + projects.map( project => `facet_bestandsname:${project}` ).join(' OR ')
@@ -97,7 +97,7 @@ class EntityAPI extends RESTDataSource {
         const entityIds = response.size > 0
             ? response.entities.map( entity => entity.entityId)
             : [];
-        return this.getEntitiesById( {entityIds} );
+        return this.getEntitiesById( {entityIds, types: entityTypes} );
     }
 
     async getEntitiesByLocationId({ locationId }) {
