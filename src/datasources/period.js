@@ -18,8 +18,16 @@ class PeriodAPI extends RESTDataSource {
     }
 
     async getPeriodById({ periodId, language }) {
+        if (!periodId) return;
         const response = await this.get(`period/${ periodId }` );
         return this.periodReducer(response, { language });
+    }
+
+    getPeriodsByIds({ periodIds, language }) {
+        if(!periodIds) return;
+        return Promise.all(
+            periodIds.map( periodId => this.getPeriodById({ periodId, language }))
+        );
     }
 
     async getPeriodByNameAndProvenance({ periodName, provenance }) {

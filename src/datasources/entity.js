@@ -31,6 +31,7 @@ class EntityAPI extends RESTDataSource {
 
     entityReducer(entity) {
         if(!entity) return;
+        const datings = entity.sections[0].content.find( object => object.label==="Datierung");
         return{
             identifier: entity.entityId,
             name: entity.title,
@@ -44,6 +45,7 @@ class EntityAPI extends RESTDataSource {
                 : "",
             relatedEntities: entity.connectedEntities ? entity.connectedEntities : "",
             type: entity.type,
+            periodId: datings && datings.content.map( dating => dating.value.match(/\/period\/(\w+)/)[1]),
             periodName: entity.facet_datierungepoche ? entity.facet_datierungepoche[0] : ""
         };
     }
