@@ -31,7 +31,13 @@ class EntityAPI extends RESTDataSource {
 
     entityReducer(entity) {
         if(!entity) return;
-        const datings = entity.sections[0].content.find( object => object.label==="Datierung");
+        //the folling section is just for preparing the ChronOntology Id from iDAI.objects data sets
+        const datingObjects = entity.sections && entity.sections[0].content.find( object => object.label==="Datierung");
+        const datingStrings = datingObjects
+                                && datingObjects.content
+                                && datingObjects.content.map( dating => dating.value && dating.value.match(/\/period\/(\w+)/));
+        const periodIdentifier = datingStrings && datingStrings.map( stringArray => stringArray && stringArray.length>0 && stringArray[1])
+        //actual reducer
         return{
             identifier: entity.entityId,
             name: entity.title,
@@ -45,7 +51,8 @@ class EntityAPI extends RESTDataSource {
                 : "",
             relatedEntities: entity.connectedEntities ? entity.connectedEntities : "",
             type: entity.type,
-            periodId: datings && datings.content.map( dating => dating.value.match(/\/period\/(\w+)/)[1]),
+            periodIds: periodIdentifier,
+                //datings && datings.content && datings.content.map( dating => dating.value && dating.value.match(/\/period\/(\w+)/)[1]),
             periodName: entity.facet_datierungepoche ? entity.facet_datierungepoche[0] : ""
         };
     }

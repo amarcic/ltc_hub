@@ -17,9 +17,9 @@
   "dependencies": {
     "apollo-datasource": "^0.6.4",
     "apollo-datasource-rest": "^0.6.11",
-    "apollo-server": "^2.13.0",
-    "apollo-server-testing": "^2.13.0",
+    "apollo-server": "^2.13.1",
+    "apollo-server-testing": "^2.13.1",
     "graphql": "^14.6.0",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.4"
   }
 }
