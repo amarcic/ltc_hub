@@ -33,9 +33,13 @@ class EntityAPI extends RESTDataSource {
         if(!entity) return;
         //the folling section is just for preparing the ChronOntology Id from iDAI.objects data sets
         const datingObjects = entity.sections && entity.sections[0].content.find( object => object.label==="Datierung");
+        //bug: dating.value.match is not a function; when value is array instead of string
+        //typeof dating.value === "string" just ignores those cases, does not handle them
+        //turning the whole array to a string works; but right now only the first link to ChronOntology is resolved into a Period
         const datingStrings = datingObjects
                                 && datingObjects.content
-                                && datingObjects.content.map( dating => dating.value && dating.value.match(/\/period\/(\w+)/));
+                                && datingObjects.content.map( dating => /*typeof dating.value === "string" &&*/ dating.value.toString().match(/\/period\/(\w+)/));
+        //if we want to produce more then one Period from one entry in dating, every second element of the array will be a ChronOntology Id
         const periodIdentifier = datingStrings && datingStrings.map( stringArray => stringArray && stringArray.length>0 && stringArray[1])
         //actual reducer
         return{
