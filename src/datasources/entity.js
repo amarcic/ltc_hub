@@ -30,11 +30,6 @@ class EntityAPI extends RESTDataSource {
     }
 
     temporalFromArachneSections(sectionsArray) {
-        //if we have a short list of object types we are interested in, checking the label for certain strings might work
-        //for a more general solution an array of dating objects should be collected from all sections
-        /*const objectSection = sectionsArray.find( section => section.label==="Informationen zum Objekt"
-                                                || section.label==="Informationen zum Bauwerk"
-                                                || section.label==="Informationen zur Topographie");*/
         const datingStrings = [];
         sectionsArray.forEach( section => section.content.forEach( object => {
             if(object.label==="Datierung") {
@@ -43,30 +38,14 @@ class EntityAPI extends RESTDataSource {
                     datingStrings.push(...capture);
             }
             }
-
-            /*
-                                && datingStrings.push(...object.content[0].value.toString().match(/\/period\/(\w+)/g))*/
         ) );
         const uniqueDatingStrings = [...new Set(datingStrings)];
-        //const datingObject = objectSection && objectSection.content.find( object => object.label==="Datierung" );
-        //const datingStrings = datingObject && datingObject.content[0].value.toString().match(/\/period\/(\w+)/);
-        const ChronOntologyIds = uniqueDatingStrings && uniqueDatingStrings.map( string => string.slice(8) )//.filter( (datingString, index) => index % 2 );
+        const ChronOntologyIds = uniqueDatingStrings && uniqueDatingStrings.map( string => string.slice(8) );
         return ChronOntologyIds;
     }
 
     entityReducer(entity) {
         if(!entity) return;
-        //the folling section is just for preparing the ChronOntology Id from iDAI.objects data sets
-        //const datingObjects = entity.sections && entity.sections[1] && entity.sections[1].content.find( object => object.label==="Datierung");
-        //bug: dating.value.match is not a function; when value is array instead of string
-        //typeof dating.value === "string" just ignores those cases, does not handle them
-        //turning the whole array to a string works; but right now only the first link to ChronOntology is resolved into a Period
-        /*const datingStrings = datingObjects
-                                && datingObjects.content
-                                && datingObjects.content.map( dating => dating.value.toString().match(/\/period\/(\w+)/));
-        */
-        //if we want to produce more then one Period from one entry in dating, every second element of the array will be a ChronOntology Id
-        //const periodIdentifier = datingStrings && datingStrings.map( stringArray => stringArray && stringArray.length>0 && stringArray[1])
         //actual reducer
         return{
             identifier: entity.entityId,
@@ -81,8 +60,7 @@ class EntityAPI extends RESTDataSource {
                 : "",
             relatedEntities: entity.connectedEntities ? entity.connectedEntities : "",
             type: entity.type,
-            periodIds: this.temporalFromArachneSections(entity.sections),//periodIdentifier,
-                //datings && datings.content && datings.content.map( dating => dating.value && dating.value.match(/\/period\/(\w+)/)[1]),
+            periodIds: this.temporalFromArachneSections(entity.sections),
             periodName: entity.facet_datierungepoche ? entity.facet_datierungepoche[0] : ""
         };
     }
