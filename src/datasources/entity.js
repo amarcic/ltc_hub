@@ -32,16 +32,25 @@ class EntityAPI extends RESTDataSource {
     temporalFromArachneSections(sectionsArray) {
         //if we have a short list of object types we are interested in, checking the label for certain strings might work
         //for a more general solution an array of dating objects should be collected from all sections
-        const objectSection = sectionsArray.find( section => section.label==="Informationen zum Objekt"
+        /*const objectSection = sectionsArray.find( section => section.label==="Informationen zum Objekt"
                                                 || section.label==="Informationen zum Bauwerk"
-                                                || section.label==="Informationen zur Topographie");
-        //const datingStrings = [];
-/*        sectionsArray.forEach( section => section.content.forEach( object => object.label==="Datierung"
-                                && datingStrings.push(...object.content[0].value.toString().match(/\/period\/(\w+)/))) );*/
+                                                || section.label==="Informationen zur Topographie");*/
+        const datingStrings = [];
+        sectionsArray.forEach( section => section.content.forEach( object => {
+            if(object.label==="Datierung") {
+                let capture = object.content[0].value.toString().match(/\/period\/(\w+)/g);
+                if (Array.isArray(capture))
+                    datingStrings.push(...capture);
+            }
+            }
 
-        const datingObject = objectSection && objectSection.content.find( object => object.label==="Datierung" );
-        const datingStrings = datingObject && datingObject.content[0].value.toString().match(/\/period\/(\w+)/);
-        const ChronOntologyIds = datingStrings && datingStrings.filter( (datingString, index) => index % 2 );
+            /*
+                                && datingStrings.push(...object.content[0].value.toString().match(/\/period\/(\w+)/g))*/
+        ) );
+        const uniqueDatingStrings = [...new Set(datingStrings)];
+        //const datingObject = objectSection && objectSection.content.find( object => object.label==="Datierung" );
+        //const datingStrings = datingObject && datingObject.content[0].value.toString().match(/\/period\/(\w+)/);
+        const ChronOntologyIds = uniqueDatingStrings && uniqueDatingStrings.map( string => string.slice(8) )//.filter( (datingString, index) => index % 2 );
         return ChronOntologyIds;
     }
 
