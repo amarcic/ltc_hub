@@ -17,7 +17,7 @@ const typeDefs = gql`
         retrieve period data for Arachne objects from ChronOntology when no ID is given in the data set
         """
         temporalArachne: Period
-        periodName: String
+        periodName: [String]
         type: String
     }
     type Subject {

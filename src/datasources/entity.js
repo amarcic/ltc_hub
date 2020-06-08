@@ -61,7 +61,7 @@ class EntityAPI extends RESTDataSource {
             relatedEntities: entity.connectedEntities ? entity.connectedEntities : "",
             type: entity.type,
             periodIds: this.temporalFromArachneSections(entity.sections),
-            periodName: entity.facet_datierungepoche ? entity.facet_datierungepoche[0] : ""
+            periodName: entity.facet_datierungepoche ? entity.facet_datierungepoche : []
         };
     }
 
