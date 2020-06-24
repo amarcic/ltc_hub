@@ -47,6 +47,24 @@ class PlaceAPI extends RESTDataSource {
         }
     }
 
+    async getArchaeologicalSites({ searchString, coordinates }) {
+        const searchStr = searchString ? "q=" + searchString : "";
+        const coordinateStr = coordinates && Array.isArray(coordinates) && coordinates.length===4
+                        ? "&bbox=" + coordinates.join("&bbox=")
+                        : "";
+
+        const response = await this.get(`search.json?${searchStr}${coordinateStr}&fq=types:archaeological-site&limit=1000`);
+        //maybe we can apply place reducer on response directly
+        const placeIds = response.total > 0
+            ? response.result.map( place => place.gazId)
+            : [];
+        return this.getPlacesByIds({ placeIds })
+    }
+
+    getSiblings() {
+
+    }
+
     async fetchChildren({ parentPlaceId}) {
         if (!parentPlaceId) return;
         const response = await this.get( 'search.json', {q: `parent:${parentPlaceId}`});

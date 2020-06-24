@@ -93,6 +93,7 @@ const typeDefs = gql`
         entitiesByCoordinates(coordinates: [Float]): [Entity]
         place(id: ID!): Place
         places(ids: [ID]!): [Place]!
+        archaeologicalSites(searchString: String, coordinates: [Float]): [Place]!
     }
 `;
 

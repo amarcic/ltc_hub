@@ -29,6 +29,7 @@ class EntityAPI extends RESTDataSource {
         this.baseURL = 'https://arachne.dainst.org/data/';
     }
 
+    //this function collects linked ChronOntology Ids from dating objects in sections in arachne response json
     temporalFromArachneSections(sectionsArray) {
         const datingStrings = [];
         sectionsArray.forEach( section => section.content.forEach( object => {
@@ -100,7 +101,7 @@ class EntityAPI extends RESTDataSource {
     }
 
     async getFilteredEntities({ searchString, coordinates, period, projects, entityTypes }) {
-        const searchStr = searchString&&searchString!=="" ? searchString: '*';
+        const searchStr = searchString&&searchString!=="" ? searchString : '*';
         const projectsConcat = projects && projects.length>0
                                 ? ` AND ` + projects.map( project => `facet_bestandsname:${project}` ).join(' OR ')
                                 : "";

@@ -19,7 +19,9 @@ module.exports = {
         place: (_, { id }, {dataSources}) =>
             dataSources.placeAPI.getPlaceById({ placeId: id }),
         places: (_, {ids}, {dataSources}) =>
-            dataSources.placeAPI.getPlacesByIds({placeIds: ids})
+            dataSources.placeAPI.getPlacesByIds({placeIds: ids}),
+        archaeologicalSites: (_, { searchString, coordinates }, {dataSources}) =>
+            dataSources.placeAPI.getArchaeologicalSites({ searchString: searchString, coordinates: coordinates })
     },
     Entity: {
         spatial: ( entity, { relations }, {dataSources}) =>
