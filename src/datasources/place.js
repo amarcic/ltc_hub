@@ -50,7 +50,9 @@ class PlaceAPI extends RESTDataSource {
     async getArchaeologicalSites({ searchString, coordinates }) {
         const searchStr = searchString ? "q=" + searchString : "";
         const coordinateStr = coordinates && Array.isArray(coordinates) && coordinates.length===4
-                        ? "&bbox=" + coordinates.join("&bbox=")
+                        //gazetteer expects bbox value in order up, right, down, left
+                        ? `&bbox=${coordinates[0]}&bbox=${coordinates[3]}&bbox=${coordinates[2]}&bbox=${coordinates[1]}`
+                        //"&bbox=" + coordinates.join("&bbox=")
                         : "";
 
         const response = await this.get(`search.json?${searchStr}${coordinateStr}&fq=types:archaeological-site&limit=1000`);
