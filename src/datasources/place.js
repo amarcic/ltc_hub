@@ -15,7 +15,8 @@ class PlaceAPI extends RESTDataSource {
             ancestorIds: place.ancestors && place.ancestors.map( ancestor => ancestor.slice(35)),
             coordinates: place.prefLocation && place.prefLocation.coordinates
                 ? place.prefLocation.coordinates.join(", ")
-                : "0, 0"
+                : "0, 0",
+            types: place.types
         }
     }
 
@@ -56,11 +57,18 @@ class PlaceAPI extends RESTDataSource {
                         : "";
 
         const response = await this.get(`search.json?${searchStr}${coordinateStr}&fq=types:archaeological-site&limit=1000`);
-        //maybe we can apply place reducer on response directly
+        //place reducer applied directly on on response
+        return response.result.map( place => this.placeReducer(place) );
+        /*fetching each place individually from gazetteer
         const placeIds = response.total > 0
             ? response.result.map( place => place.gazId)
             : [];
         return this.getPlacesByIds({ placeIds })
+        */
+    }
+
+    getArchaeologicalSitesByRegion({ regionId }) {
+
     }
 
     getSiblings() {

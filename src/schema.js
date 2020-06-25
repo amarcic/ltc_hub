@@ -31,6 +31,7 @@ const typeDefs = gql`
         fallsIntoPlace: Place
         containsPlaces: [Place]
         locatedInPlaces: [Place]
+        types: [String]
     }
     type Title{
         language: Languages
