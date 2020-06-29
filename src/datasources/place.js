@@ -67,8 +67,10 @@ class PlaceAPI extends RESTDataSource {
         */
     }
 
-    getArchaeologicalSitesByRegion({ regionId }) {
-
+    async getArchaeologicalSitesByRegion({ regionId }) {
+        const response = await this.get('search.json',
+                                        {fq: `types:archaeological-site AND ancestors:${regionId} OR parent:${regionId}`, limit:1000});
+        return response.result.map( place => this.placeReducer(place) );
     }
 
     getSiblings() {

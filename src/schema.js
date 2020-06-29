@@ -95,6 +95,7 @@ const typeDefs = gql`
         place(id: ID!): Place
         places(ids: [ID]!): [Place]!
         archaeologicalSites(searchString: String, coordinates: [Float]): [Place]!
+        sitesByRegion( id: ID! ): [Place]
     }
 `;
 
