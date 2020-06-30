@@ -73,8 +73,11 @@ class PlaceAPI extends RESTDataSource {
         return response.result.map( place => this.placeReducer(place) );
 }
 
-    async getSiblings({ siteId }) {
-        const response = await this.get('search.json', {fq: `types:archaeological-site AND parent:${siteId}`});
+    async getSiblings({ siteId, placeTypes, siblingType }) {
+        //discuss: checks if the current place is of the requested sibling type (if siblingType is given)
+        if(siblingType&&placeTypes.indexOf(siblingType)===-1) return;
+        const typeSelection = siblingType && ` AND types:${siblingType}` || "";
+        const response = await this.get('search.json', {fq: `parent:${siteId} ${typeSelection}`, limit: 1000});
         return response.result.map( place => this.placeReducer(place));
     }
 
