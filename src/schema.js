@@ -33,6 +33,7 @@ const typeDefs = gql`
         locatedInPlaces: [Place]
         types: [String]
         discoveryContext: [Place]
+        linkedObjects(types: [RelatedType]): [Entity]
     }
     type Title{
         language: Languages
