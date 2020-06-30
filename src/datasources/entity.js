@@ -66,8 +66,9 @@ class EntityAPI extends RESTDataSource {
         };
     }
 
-    async getEntityById({ entityId }) {
+    async getEntityById({ entityId, types }) {
         const response = await this.get(`entity/${entityId}`, {live: true} ).catch(() => {});
+        if (types&&types.indexOf(response.type)===-1) return;
         return this.entityReducer(response);
     }
 
@@ -118,13 +119,13 @@ class EntityAPI extends RESTDataSource {
         return this.getEntitiesById( {entityIds, types: entityTypes} );
     }
 
-    async getEntitiesByLocationId({ locationId }) {
+    async getEntitiesByLocationId({ locationId, types }) {
         const response = await this.get(`search`, {q: `places.gazetteerId:${locationId}` });
         //the following uncanny code works because when destructuring the entity passed to getEntityById
         //there actually is a key "entityId" on the passed object
         //return response.entities.map( entity => this.getEntityById( entity ) )
         //corrected code below: now only the value of entityId is passed to getEntityById
-        return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId }) );
+        return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId, types: types }) );
     }
 
     // for some gazetteer Ids: when accessing the spatial property of the entities an error occurs

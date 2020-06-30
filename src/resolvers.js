@@ -51,6 +51,6 @@ module.exports = {
         discoveryContext: ( place, _, {dataSources}) =>
             dataSources.placeAPI.getSiblings({siteId: place.parentId, placeTypes:place.types, siblingType:'archaeological-site'}),
         linkedObjects: ( place, { types }, {dataSources}) =>
-            dataSources.entityAPI.getEntitiesByLocationId({locationId: place.identifier})
+            dataSources.entityAPI.getEntitiesByLocationId({locationId: place.identifier, types: types})
     }
 }
