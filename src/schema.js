@@ -29,9 +29,10 @@ const typeDefs = gql`
         name: String
         coordinates: String
         fallsIntoPlace: Place
-        containsPlaces: [Place]
+        containedSites: [Place]
         locatedInPlaces: [Place]
         types: [String]
+        discoveryContext: [Place]
     }
     type Title{
         language: Languages

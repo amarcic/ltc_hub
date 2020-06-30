@@ -46,8 +46,9 @@ module.exports = {
             dataSources.placeAPI.getPlaceById({placeId: place.parentId}),
         locatedInPlaces: (place, _, {dataSources}) =>
             dataSources.placeAPI.getPlacesByIds({ placeIds: place.ancestorIds }),
-        containsPlaces: ( place, _, {dataSources}) =>
-            dataSources.placeAPI.fetchChildren({ parentPlaceId: place.identifier})
-
+        containedSites: ( place, _, {dataSources}) =>
+            dataSources.placeAPI.getArchaeologicalSitesByRegion({ regionId: place.identifier}),
+        discoveryContext: ( place, _, {dataSources}) =>
+            dataSources.placeAPI.getSiblings({siteId: place.parentId})
     }
 }
