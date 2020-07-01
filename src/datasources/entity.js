@@ -125,7 +125,9 @@ class EntityAPI extends RESTDataSource {
         //there actually is a key "entityId" on the passed object
         //return response.entities.map( entity => this.getEntityById( entity ) )
         //corrected code below: now only the value of entityId is passed to getEntityById
-        return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId, types: types }) );
+        if (response.entities) {
+            return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId, types: types }) );
+        }
     }
 
     // for some gazetteer Ids: when accessing the spatial property of the entities an error occurs
