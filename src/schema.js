@@ -28,7 +28,7 @@ const typeDefs = gql`
         identifier: ID!
         name: String
         coordinates: String
-        fallsIntoPlace: Place
+        locatedIn: Place
         containedSites: [Place]
         locatedInPlaces: [Place]
         types: [String]

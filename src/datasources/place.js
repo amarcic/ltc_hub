@@ -67,6 +67,7 @@ class PlaceAPI extends RESTDataSource {
         */
     }
 
+    //can be generalized when other other types of included places need to be fetched
     async getArchaeologicalSitesByRegion({ regionId }) {
         const response = await this.get('search.json',
                                         {fq: `types:archaeological-site AND (ancestors:${regionId} OR parent:${regionId})`, limit:1000});

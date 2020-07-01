@@ -42,7 +42,7 @@ module.exports = {
             dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities, types: types })
     },
     Place: {
-        fallsIntoPlace: ( place, _, {dataSources}) =>
+        locatedIn: ( place, _, {dataSources}) =>
             dataSources.placeAPI.getPlaceById({placeId: place.parentId}),
         locatedInPlaces: (place, _, {dataSources}) =>
             dataSources.placeAPI.getPlacesByIds({ placeIds: place.ancestorIds }),
