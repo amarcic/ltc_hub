@@ -44,7 +44,7 @@ module.exports = {
     Place: {
         locatedIn: ( place, _, {dataSources}) =>
             dataSources.placeAPI.getPlaceById({placeId: place.parentId}),
-        locatedInPlaces: (place, _, {dataSources}) =>
+        locatedInPlaces: ( place, _, {dataSources}) =>
             dataSources.placeAPI.getPlacesByIds({ placeIds: place.ancestorIds }),
         containedSites: ( place, _, {dataSources}) =>
             dataSources.placeAPI.getArchaeologicalSitesByRegion({ regionId: place.identifier}),
@@ -52,5 +52,17 @@ module.exports = {
             dataSources.placeAPI.getSiblings({siteId: place.parentId, placeTypes:place.types, siblingType:'archaeological-site'}),
         linkedObjects: ( place, { types }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByLocationId({locationId: place.identifier, types: types})
+    },
+    Period: {
+        coreArea: ( period, _, {dataSources}) =>
+            dataSources.placeAPI.getPlacesByIds({ placeIds: period.coreAreaIds }),
+        follows: ( period, {language}, {dataSources}) =>
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.followsIds, language: language? language : "de" }),
+        followedBy: ( period, {language}, {dataSources}) =>
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.isFollowedByIds, language: language? language : "de" }),
+        partOf: ( period, {language}, {dataSources}) =>
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.isPartOfIds, language: language? language : "de" }),
+        parts: ( period, {language}, {dataSources}) =>
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.hasPartIds, language: language? language : "de" })
     }
 }

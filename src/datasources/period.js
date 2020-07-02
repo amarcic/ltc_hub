@@ -20,7 +20,13 @@ class PeriodAPI extends RESTDataSource {
                     && period.resource.hasTimespan[0].end
                     && period.resource.hasTimespan[0].end.at
                 ? period.resource.hasTimespan[0].end.at
-                : ""
+                : "",
+            coreAreaIds: period.resource.hasCoreArea && period.resource.hasCoreArea.map( gazetteerURI => gazetteerURI.substr(-7) ),
+            types: period.resource.types && period.resource.types,
+            followsIds: period.resource.relations && period.resource.relations.follows && period.resource.relations.follows,
+            isFollowedByIds: period.resource.relations && period.resource.relations.isFollowedBy,
+            isPartOfIds: period.resource.relations && period.resource.relations.isPartOf,
+            hasPartIds: period.resource.relations && period.resource.relations.hasPart
         }
     }
 

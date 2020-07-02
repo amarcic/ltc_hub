@@ -44,6 +44,12 @@ const typeDefs = gql`
         title: String
         begin: String
         end: String
+        types: [String]
+        coreArea: [Place]
+        follows: [Period]
+        followedBy: [Period]
+        partOf: [Period]
+        parts: [Period]
     }
     enum SpatialRelations {
         Fundort
