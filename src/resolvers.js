@@ -42,6 +42,17 @@ module.exports = {
             dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities, types: types })
     },
     Place: {
+        /*temporal: ( place, { language }, {dataSources}) =>
+            {
+                return Promise.all( dataSources.entityAPI.getEntitiesByLocationId({locationId: place.identifier, types: ["Bauwerke"]}) )
+                    .then( result => result.reduce( (acc, entity) => [ ...acc, ...dataSources.getPeriodsByIds({ periodIds: entity.periodIds, language: language? language : "de" })]  ) );
+
+                const topographies = dataSources.entityAPI.getEntitiesByLocationId({locationId: place.identifier, types: ["Bauwerke"]})
+                return topographies.then(result => result.reduce( (acc, entity) => [ ...acc, ...dataSources.getPeriodsByIds({ periodIds: entity.periodIds, language: language? language : "de" })]  ) );
+
+                return topographies.reduce( (acc, entity) => [ ...acc, ...dataSources.getPeriodsByIds({ periodIds: entity.periodIds, language: language? language : "de" })]  );
+
+            },*/
         locatedIn: ( place, _, {dataSources}) =>
             dataSources.placeAPI.getPlaceById({placeId: place.parentId}),
         locatedInPlaces: ( place, _, {dataSources}) =>

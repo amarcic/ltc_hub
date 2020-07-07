@@ -32,7 +32,7 @@ class EntityAPI extends RESTDataSource {
     //this function collects linked ChronOntology Ids from dating objects in sections in arachne response json
     temporalFromArachneSections(sectionsArray) {
         const datingStrings = [];
-        sectionsArray.forEach( section => section.content.forEach( object => {
+        sectionsArray && sectionsArray.forEach( section => section.content.forEach( object => {
             if(object.label==="Datierung") {
                 let capture = object.content[0].value.toString().match(/\/period\/(\w+)/g);
                 if (Array.isArray(capture))
