@@ -33,6 +33,7 @@ const typeDefs = gql`
         containedSites: [Place]
         locatedInPlaces: [Place]
         types: [String]
+        provenance: [String]
         discoveryContext: [Place]
         linkedObjects(types: [RelatedType]): [Entity]
     }

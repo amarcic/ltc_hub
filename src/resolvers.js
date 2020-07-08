@@ -42,8 +42,14 @@ module.exports = {
             dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities, types: types })
     },
     Place: {
-        /*temporal: ( place, { language }, {dataSources}) =>
-            {
+        temporal: ( place, { language }, {dataSources}) =>
+            { const topographies = dataSources.entityAPI.
+                getEntitiesByLocationId({locationId: place.identifier, types: ["Bauwerke"]})
+                .then( value => value.map( entity => dataSources.periodAPI.getPeriodsByIds({periodIds: ["KHlBuWSbmEWd"], language: language? language : "de" }).toString()) );
+            return topographies.then( value => value.reduce( (acc, element) => [...acc, ...element] ));
+            },
+
+         /*  {
                 return Promise.all( dataSources.entityAPI.getEntitiesByLocationId({locationId: place.identifier, types: ["Bauwerke"]}) )
                     .then( result => result.reduce( (acc, entity) => [ ...acc, ...dataSources.getPeriodsByIds({ periodIds: entity.periodIds, language: language? language : "de" })]  ) );
 
