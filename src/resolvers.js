@@ -22,8 +22,8 @@ module.exports = {
             dataSources.placeAPI.getPlacesByIds({placeIds: ids}),
         archaeologicalSites: (_, { searchString, coordinates }, {dataSources}) =>
             dataSources.placeAPI.getArchaeologicalSites({ searchString: searchString, coordinates: coordinates }),
-        sitesByRegion: (_, {id}, {dataSources}) =>
-            dataSources.placeAPI.getArchaeologicalSitesByRegion({ regionId: id })
+        sitesByRegion: (_, {id, searchString }, {dataSources}) =>
+            dataSources.placeAPI.getArchaeologicalSitesByRegion({ searchString: searchString, regionId: id })
     },
     Entity: {
         spatial: ( entity, { relations }, {dataSources}) =>
@@ -34,7 +34,7 @@ module.exports = {
             dataSources.subjectAPI.getSubjectById({ subjectId: "_8bca4bf1"}),
         temporal: ( entity, { language }, {dataSources}) =>
             //chronontology ID is fixed for now since iDAI.objects has no IDs, just period names
-            dataSources.periodAPI.getPeriodsByIds({ periodIds: entity.periodIds , language: language? language : "de" }),
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: entity.periodIds, language: language? language : "de" }),
         temporalArachne: ( entity, _, {dataSources}) =>
             //limiting provenance to "Arachne" in most cases identifies the iDAI.chronontology periods associated with datings in iDAI.arachne
             dataSources.periodAPI.getPeriodByNameAndProvenance({ periodName: entity.periodName, provenance: "Arachne" }),
@@ -43,22 +43,13 @@ module.exports = {
     },
     Place: {
         temporal: ( place, { language }, {dataSources}) =>
-            { const topographies = dataSources.entityAPI.
-                getEntitiesByLocationId({locationId: place.identifier, types: ["Bauwerke"]})
-                .then( value => value.map( entity => dataSources.periodAPI.getPeriodsByIds({periodIds: ["KHlBuWSbmEWd"], language: language? language : "de" }).toString()) );
-            return topographies.then( value => value.reduce( (acc, element) => [...acc, ...element] ));
-            },
-
-         /*  {
-                return Promise.all( dataSources.entityAPI.getEntitiesByLocationId({locationId: place.identifier, types: ["Bauwerke"]}) )
-                    .then( result => result.reduce( (acc, entity) => [ ...acc, ...dataSources.getPeriodsByIds({ periodIds: entity.periodIds, language: language? language : "de" })]  ) );
-
-                const topographies = dataSources.entityAPI.getEntitiesByLocationId({locationId: place.identifier, types: ["Bauwerke"]})
-                return topographies.then(result => result.reduce( (acc, entity) => [ ...acc, ...dataSources.getPeriodsByIds({ periodIds: entity.periodIds, language: language? language : "de" })]  ) );
-
-                return topographies.reduce( (acc, entity) => [ ...acc, ...dataSources.getPeriodsByIds({ periodIds: entity.periodIds, language: language? language : "de" })]  );
-
-            },*/
+            dataSources.entityAPI.getEntitiesPeriodIdsByLocationId({locationId: place.identifier, types: ["Topographien"]})
+/*.then( periodIds => periodIds.map( periodId =>
+        periodId/*.then( val =>
+            dataSources.periodAPI.getPeriodById({ periodId: value, language: language? language : "de" })
+        )
+                )
+            )*/,
         locatedIn: ( place, _, {dataSources}) =>
             dataSources.placeAPI.getPlaceById({placeId: place.parentId}),
         locatedInPlaces: ( place, _, {dataSources}) =>

@@ -130,6 +130,20 @@ class EntityAPI extends RESTDataSource {
         }
     }
 
+    async getEntitiesPeriodIdsByLocationId({ locationId, types }) {
+        const response = await this.get(`search`, {q: `places.gazetteerId:${locationId}` });
+        const relatedEntities = await response.entities.map( entity => this.getEntityById({ entityId: entity.entityId, types: types }));
+        const periodIds = await relatedEntities.map( entity => entity.periodIds );
+        return periodIds;
+        /*if (response.entities) {
+            return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId, types: types })
+                .then( entity => entity && entity.periodIds)
+                .then( arrayOfPeriodIdsArrays =>
+                    arrayOfPeriodIdsArrays && arrayOfPeriodIdsArrays.reduce( (accumulator, array ) => [ ...accumulator, ...array ] ))
+            );
+        }*/
+    }
+
     // for some gazetteer Ids: when accessing the spatial property of the entities an error occurs
     getEntitiesByLocationIds({ locationIds }) {
         return Promise.all(

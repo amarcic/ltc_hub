@@ -28,7 +28,7 @@ const typeDefs = gql`
         identifier: ID!
         name: String
         coordinates: String
-        temporal: [Period]
+        temporal: [String]
         locatedIn: Place
         containedSites: [Place]
         locatedInPlaces: [Place]
@@ -105,7 +105,7 @@ const typeDefs = gql`
         place(id: ID!): Place
         places(ids: [ID]!): [Place]!
         archaeologicalSites(searchString: String, coordinates: [String]): [Place]!
-        sitesByRegion( id: ID! ): [Place]
+        sitesByRegion( searchString: String, id: ID! ): [Place]
     }
 `;
 
