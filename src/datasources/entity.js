@@ -120,7 +120,9 @@ class EntityAPI extends RESTDataSource {
     }
 
     async getEntitiesByLocationId({ locationId, types }) {
-        const typesFilter = types.map( type => `fq=facet_kategorie:"${type}"`).join("&");
+        const typesFilter = types
+                                ? types.map( type => `fq=facet_kategorie:"${type}"`).join("&")
+                                : "";
         const placeSearch = `q=places.gazetteerId:${locationId}`;
         const response = await this.get(`search?${typesFilter}&${placeSearch}`);
         //const response = await this.get(`search`, {q: `places.gazetteerId:${locationId}` });
