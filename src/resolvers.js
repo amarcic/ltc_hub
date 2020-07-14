@@ -44,7 +44,8 @@ module.exports = {
     Place: {
         temporal: async ( place, { language }, {dataSources}) => {
             const ents = await dataSources.entityAPI.getEntitiesByLocationId({ locationId: place.identifier, types: ["Topographien"]});
-            const ments = await Promise.all(ents);
+            const fents = ents || [];
+            const ments = await Promise.all(fents);
             const bents = ments.map( m => m && m.periodIds )
                 .filter( a => Array.isArray(a) && a.length>0)
             const yents = bents.length > 0 ? bents.reduce( (acc, arr) => [ ...acc, ...arr] ) : bents;
