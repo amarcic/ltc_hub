@@ -120,17 +120,17 @@ class EntityAPI extends RESTDataSource {
     }
 
     async getEntitiesByLocationId({ locationId, types }) {
-        const response = await this.get(`search`, {q: `places.gazetteerId:${locationId}` });
-        //the following uncanny code works because when destructuring the entity passed to getEntityById
-        //there actually is a key "entityId" on the passed object
-        //return response.entities.map( entity => this.getEntityById( entity ) )
-        //corrected code below: now only the value of entityId is passed to getEntityById
+        const typesFilter = types.map( type => `fq=facet_kategorie:"${type}"`).join("&");
+        const placeSearch = `q=places.gazetteerId:${locationId}`;
+        const response = await this.get(`search?${typesFilter}&${placeSearch}`);
+        //const response = await this.get(`search`, {q: `places.gazetteerId:${locationId}` });
         if (response.entities) {
-            return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId, types: types }) );
+            return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId }) );
         }
     }
 
     async getEntitiesPeriodIdsByLocationId({ locationId, types }) {
+
         const response = await this.get(`search`, {q: `places.gazetteerId:${locationId}` });
         const relatedEntities = await response.entities.map( entity => this.getEntityById({ entityId: entity.entityId, types: types }));
         const periodIds = await relatedEntities.map( entity => entity.periodIds );

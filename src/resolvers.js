@@ -42,14 +42,28 @@ module.exports = {
             dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities, types: types })
     },
     Place: {
-        temporal: ( place, { language }, {dataSources}) =>
+        temporal: async ( place, { language }, {dataSources}) => {
+            const ents = await dataSources.entityAPI.getEntitiesByLocationId({ locationId: place.identifier, types: ["Topographien"]});
+            const ments = await Promise.all(ents);
+            const bents = ments.map( m => m && m.periodIds )
+                .filter( a => Array.isArray(a) && a.length>0)
+            const yents = bents.length > 0 ? bents.reduce( (acc, arr) => [ ...acc, ...arr] ) : bents;
+            const zents = [...new Set(yents)];
+            const tents = dataSources.periodAPI.getPeriodsByIds({ periodIds: zents, language: language? language : "de"})
+            return tents;
+        }
+                //.then(res=> Promise.all( res ) )
+                //.then( entities => entities.json() )
+                //.then( entitiesJSON => entitiesJSON.map( entity => entity.periodIds ) )
+        ,
+        /*temporal: ( place, { language }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesPeriodIdsByLocationId({locationId: place.identifier, types: ["Topographien"]})
-/*.then( periodIds => periodIds.map( periodId =>
-        periodId/*.then( val =>
-            dataSources.periodAPI.getPeriodById({ periodId: value, language: language? language : "de" })
-        )
+            .then( periodIds => periodIds.map( periodId =>
+                periodId.then( val =>
+                    dataSources.periodAPI.getPeriodById({ periodId: value, language: language? language : "de" })
+                    )
                 )
-            )*/,
+            ),*/
         locatedIn: ( place, _, {dataSources}) =>
             dataSources.placeAPI.getPlaceById({placeId: place.parentId}),
         locatedInPlaces: ( place, _, {dataSources}) =>
