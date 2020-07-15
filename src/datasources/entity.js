@@ -103,12 +103,15 @@ class EntityAPI extends RESTDataSource {
 
     async getFilteredEntities({ searchString, coordinates, period, projects, entityTypes }) {
         const searchStr = searchString&&searchString!=="" ? searchString : '*';
+        const typesFilter = entityTypes && entityTypes.length>0
+            ? " AND facet_kategorie:(" + entityTypes.map( type => `"${type}"`).join(" OR ") + ")"
+            : "";
         const projectsConcat = projects && projects.length>0
                                 ? ` AND ` + projects.map( project => `facet_bestandsname:${project}` ).join(' OR ')
                                 : "";
         const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
         let params = {
-            q: `${searchStr} ${projectsConcat}`
+            q: `${searchStr} ${projectsConcat} ${typesFilter}`
         }
         if(coordinates&&coordinates.length===4) params['bbox']= coordinates;
         if(period&&period!=="") params['fq']= `facet_datierungepoche:${period}`;
@@ -116,27 +119,36 @@ class EntityAPI extends RESTDataSource {
         const entityIds = response.size > 0
             ? response.entities.map( entity => entity.entityId)
             : [];
-        return this.getEntitiesById( {entityIds, types: entityTypes} );
+        return this.getEntitiesById( {entityIds} );
     }
 
     async getEntitiesByLocationId({ locationId, types }) {
         const typesFilter = types
                                 ? types.map( type => `fq=facet_kategorie:"${type}"`).join("&")
                                 : "";
-        const placeSearch = `q=places.gazetteerId:${locationId}`;
-        const response = await this.get(`search?${typesFilter}&${placeSearch}`);
+        const locationSearch = `q=places.gazetteerId:${locationId}`;
+        const response = await this.get(`search?${typesFilter}&${locationSearch}`);
         //const response = await this.get(`search`, {q: `places.gazetteerId:${locationId}` });
         if (response.entities) {
             return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId }) );
         }
     }
 
+    //not working correctly; not needed right now
     async getEntitiesPeriodIdsByLocationId({ locationId, types }) {
-
-        const response = await this.get(`search`, {q: `places.gazetteerId:${locationId}` });
-        const relatedEntities = await response.entities.map( entity => this.getEntityById({ entityId: entity.entityId, types: types }));
-        const periodIds = await relatedEntities.map( entity => entity.periodIds );
-        return periodIds;
+        const typesFilter = types
+            ? types.map( type => `fq=facet_kategorie:"${type}"`).join("&")
+            : "";
+        const locationSearch = `q=places.gazetteerId:${locationId}`;
+        const response = await this.get(`search?${typesFilter}&${locationSearch}`);
+        const relatedEntities = await response.entities.map( entity => this.getEntityById({ entityId: entity.entityId }));
+        //const resolvedEntities = await Promise.all(relatedEntities);
+        const periodIds = await relatedEntities
+                                    .map( entity => entity.periodIds )
+                                    .filter( a => Array.isArray(a) && a.length>0);
+        const flatPeriodIds = periodIds.length > 0 ? periodIds.reduce( (acc, arr) => [ ...acc, ...arr] ) : periodIds;
+        const uniquePeriodIds = [...new Set(flatPeriodIds)];
+        return uniquePeriodIds;
         /*if (response.entities) {
             return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId, types: types })
                 .then( entity => entity && entity.periodIds)

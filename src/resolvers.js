@@ -45,11 +45,13 @@ module.exports = {
         temporal: async ( place, { language }, {dataSources}) => {
             const linkedEntities = await dataSources.entityAPI.getEntitiesByLocationId({ locationId: place.identifier, types: ["Topographien"]});
             const entityPromiseArray = linkedEntities || [];
-            const resolvedEntities = await Promise.all(entityPromiseArrayArray);
-            const periodIds = resolvedEntities.map( m => m && m.periodIds )
-                .filter( a => Array.isArray(a) && a.length>0)
+            const resolvedEntities = await Promise.all(entityPromiseArray);
+            const periodIds = resolvedEntities
+                                .map( m => m && m.periodIds )
+                                .filter( a => Array.isArray(a) && a.length>0)
             const flatPeriodIds = periodIds.length > 0 ? periodIds.reduce( (acc, arr) => [ ...acc, ...arr] ) : periodIds;
             const uniquePeriodIds = [...new Set(flatPeriodIds)];
+            //const uniquePeriodIds = await dataSources.entityAPI.getEntitiesPeriodIdsByLocationId({ locationId: place.identifier, types: ["Topographien"] })
             const fetchedPeriods = dataSources.periodAPI.getPeriodsByIds({ periodIds: uniquePeriodIds, language: language? language : "de"})
             return fetchedPeriods;
         }
