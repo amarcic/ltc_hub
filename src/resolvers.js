@@ -43,15 +43,15 @@ module.exports = {
     },
     Place: {
         temporal: async ( place, { language }, {dataSources}) => {
-            const ents = await dataSources.entityAPI.getEntitiesByLocationId({ locationId: place.identifier, types: ["Topographien"]});
-            const fents = ents || [];
-            const ments = await Promise.all(fents);
-            const bents = ments.map( m => m && m.periodIds )
+            const linkedEntities = await dataSources.entityAPI.getEntitiesByLocationId({ locationId: place.identifier, types: ["Topographien"]});
+            const entityPromiseArray = linkedEntities || [];
+            const resolvedEntities = await Promise.all(entityPromiseArrayArray);
+            const periodIds = resolvedEntities.map( m => m && m.periodIds )
                 .filter( a => Array.isArray(a) && a.length>0)
-            const yents = bents.length > 0 ? bents.reduce( (acc, arr) => [ ...acc, ...arr] ) : bents;
-            const zents = [...new Set(yents)];
-            const tents = dataSources.periodAPI.getPeriodsByIds({ periodIds: zents, language: language? language : "de"})
-            return tents;
+            const flatPeriodIds = periodIds.length > 0 ? periodIds.reduce( (acc, arr) => [ ...acc, ...arr] ) : periodIds;
+            const uniquePeriodIds = [...new Set(flatPeriodIds)];
+            const fetchedPeriods = dataSources.periodAPI.getPeriodsByIds({ periodIds: uniquePeriodIds, language: language? language : "de"})
+            return fetchedPeriods;
         }
                 //.then(res=> Promise.all( res ) )
                 //.then( entities => entities.json() )
