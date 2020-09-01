@@ -47,13 +47,16 @@ module.exports = {
             return dataSources.entityAPI.getEntitiesByLocationId({ locationId: place.identifier, types: ["Topographien"]})
                 .then( arrayOfPromisedEntities =>
                         Promise.all(arrayOfPromisedEntities).then( resolvedEntites =>
+                            //get ids of periods from fetched entities
                             resolvedEntites.map( entity => entity.periodIds )
                                 .flat()
-                                //filter douplicate period ids: 1.sort 2.filter repeated
+                                //filter duplicate period ids: 1.sort 2.filter repeated
                                 .sort()
-                                .filter( (item, position, array ) => !position || item != array[position-1] )
-                                .map( id =>
-                                dataSources.periodAPI.getPeriodById({ periodId: id, language: language? language : "de"})
+                                .filter( (item, position, array ) =>
+                                    !position || item != array[position-1] )
+                                //fetch period data for each id
+                                .map( periodId =>
+                                    dataSources.periodAPI.getPeriodById({ periodId: periodId, language: language? language : "de"})
                             )
                         )
                     );
