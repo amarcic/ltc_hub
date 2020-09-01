@@ -42,8 +42,22 @@ module.exports = {
             dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities, types: types })
     },
     Place: {
-        temporal: async ( place, { language }, {dataSources}) => {
-            const linkedEntities = await dataSources.entityAPI.getEntitiesByLocationId({ locationId: place.identifier, types: ["Topographien"]});
+        temporal:  /*async*/ ( place, { language }, {dataSources}) => {
+            //"Topographien" is probably just a fill in for testing the code
+            return dataSources.entityAPI.getEntitiesByLocationId({ locationId: place.identifier, types: ["Topographien"]})
+                .then( arrayOfPromisedEntities =>
+                        Promise.all(arrayOfPromisedEntities).then( resolvedEntites =>
+                            resolvedEntites.map( entity => entity.periodIds )
+                                .flat()
+                                //filter douplicate period ids: 1.sort 2.filter repeated
+                                .sort()
+                                .filter( (item, position, array ) => !position || item != array[position-1] )
+                                .map( id =>
+                                dataSources.periodAPI.getPeriodById({ periodId: id, language: language? language : "de"})
+                            )
+                        )
+                    );
+            /*const linkedEntities = await dataSources.entityAPI.getEntitiesByLocationId({ locationId: place.identifier, types: ["Topographien"]});
             const entityPromiseArray = linkedEntities || [];
             const resolvedEntities = await Promise.all(entityPromiseArray);
             const periodIds = resolvedEntities
@@ -51,22 +65,9 @@ module.exports = {
                                 .filter( a => Array.isArray(a) && a.length>0)
             const flatPeriodIds = periodIds.length > 0 ? periodIds.reduce( (acc, arr) => [ ...acc, ...arr] ) : periodIds;
             const uniquePeriodIds = [...new Set(flatPeriodIds)];
-            //const uniquePeriodIds = await dataSources.entityAPI.getEntitiesPeriodIdsByLocationId({ locationId: place.identifier, types: ["Topographien"] })
             const fetchedPeriods = dataSources.periodAPI.getPeriodsByIds({ periodIds: uniquePeriodIds, language: language? language : "de"})
-            return fetchedPeriods;
-        }
-                //.then(res=> Promise.all( res ) )
-                //.then( entities => entities.json() )
-                //.then( entitiesJSON => entitiesJSON.map( entity => entity.periodIds ) )
-        ,
-        /*temporal: ( place, { language }, {dataSources}) =>
-            dataSources.entityAPI.getEntitiesPeriodIdsByLocationId({locationId: place.identifier, types: ["Topographien"]})
-            .then( periodIds => periodIds.map( periodId =>
-                periodId.then( val =>
-                    dataSources.periodAPI.getPeriodById({ periodId: value, language: language? language : "de" })
-                    )
-                )
-            ),*/
+            return fetchedPeriods;*/
+        },
         locatedIn: ( place, _, {dataSources}) =>
             dataSources.placeAPI.getPlaceById({placeId: place.parentId}),
         locatedInPlaces: ( place, _, {dataSources}) =>
