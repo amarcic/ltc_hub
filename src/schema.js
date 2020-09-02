@@ -47,6 +47,7 @@ const typeDefs = gql`
         begin: String
         end: String
         types: [String]
+        meanings(specific: PeriodMeaningType): [Period]
         coreArea: [Place]
         follows: [Period]
         followedBy: [Period]
@@ -82,6 +83,11 @@ const typeDefs = gql`
         Topographien
         Typen
         dreiDModelle
+    }
+    enum PeriodMeaningType {
+        political   
+        cultural
+        material_culture
     }
     enum Languages {
         de

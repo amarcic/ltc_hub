@@ -15,7 +15,7 @@ class PeriodAPI extends RESTDataSource {
             begin: period.resource.hasTimespan
                     && period.resource.hasTimespan[0].begin
                 ? period.resource.hasTimespan[0].begin.at
-                : "",
+                : "*",
             end: period.resource.hasTimespan
                     && period.resource.hasTimespan[0].end
                     && period.resource.hasTimespan[0].end.at
@@ -23,6 +23,7 @@ class PeriodAPI extends RESTDataSource {
                 : "",
             coreAreaIds: period.resource.hasCoreArea && period.resource.hasCoreArea.map( gazetteerURI => gazetteerURI.substr(-7) ),
             types: period.resource.types && period.resource.types,
+            hasMeanings: period.resource.relations && period.resource.relations.hasSense,
             followsIds: period.resource.relations && period.resource.relations.follows && period.resource.relations.follows,
             isFollowedByIds: period.resource.relations && period.resource.relations.isFollowedBy,
             isPartOfIds: period.resource.relations && period.resource.relations.isPartOf,
@@ -30,16 +31,17 @@ class PeriodAPI extends RESTDataSource {
         }
     }
 
-    async getPeriodById({ periodId, language }) {
+    async getPeriodById({ periodId, language, type }) {
         if (!periodId) return;
         const response = await this.get(`period/${ periodId }` );
+        if (type&&response.resource.types.indexOf(type)===-1) return;
         return this.periodReducer(response, { language });
     }
 
-    getPeriodsByIds({ periodIds, language }) {
+    getPeriodsByIds({ periodIds, language, type }) {
         if(!periodIds) return;
         return Promise.all(
-            periodIds.map( periodId => this.getPeriodById({ periodId, language }))
+            periodIds.map( periodId => this.getPeriodById({ periodId, language, type }))
         );
     }
 

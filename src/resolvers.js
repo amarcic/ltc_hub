@@ -32,9 +32,9 @@ module.exports = {
             //ids of subjects/thesaurus concepts are not found in iDAI.objects data sets, so they cannot be passed to the subject API
             // replace the hardcoded ID below later
             dataSources.subjectAPI.getSubjectById({ subjectId: "_8bca4bf1"}),
-        temporal: ( entity, { language }, {dataSources}) =>
+        temporal: ( entity, { meanings, language }, {dataSources}) =>
             //chronontology ID is fixed for now since iDAI.objects has no IDs, just period names
-            dataSources.periodAPI.getPeriodsByIds({ periodIds: entity.periodIds, language: language? language : "de" }),
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: entity.periodIds, meanings: meanings || "all", language: language? language : "de" }),
         temporalArachne: ( entity, _, {dataSources}) =>
             //limiting provenance to "Arachne" in most cases identifies the iDAI.chronontology periods associated with datings in iDAI.arachne
             dataSources.periodAPI.getPeriodByNameAndProvenance({ periodName: entity.periodName, provenance: "Arachne" }),
@@ -85,13 +85,15 @@ module.exports = {
     Period: {
         coreArea: ( period, _, {dataSources}) =>
             dataSources.placeAPI.getPlacesByIds({ placeIds: period.coreAreaIds }),
+        meanings: (period, {specific, language}, {dataSources}) =>
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.hasMeanings, language: language||"de", type: specific||undefined }),
         follows: ( period, {language}, {dataSources}) =>
-            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.followsIds, language: language? language : "de" }),
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.followsIds, language: language||"de" }),
         followedBy: ( period, {language}, {dataSources}) =>
-            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.isFollowedByIds, language: language? language : "de" }),
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.isFollowedByIds, language: language||"de" }),
         partOf: ( period, {language}, {dataSources}) =>
-            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.isPartOfIds, language: language? language : "de" }),
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.isPartOfIds, language: language||"de" }),
         parts: ( period, {language}, {dataSources}) =>
-            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.hasPartIds, language: language? language : "de" })
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.hasPartIds, language: language|| "de" })
     }
 }
