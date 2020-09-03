@@ -47,7 +47,7 @@ const typeDefs = gql`
         begin: String
         end: String
         types: [String]
-        meanings(specific: PeriodMeaningType): [Period]
+        senses(typeOfSense: TypeSense): [Period]
         coreArea: [Place]
         follows: [Period]
         followedBy: [Period]
@@ -84,7 +84,7 @@ const typeDefs = gql`
         Typen
         dreiDModelle
     }
-    enum PeriodMeaningType {
+    enum TypeSense {
         political   
         cultural
         material_culture

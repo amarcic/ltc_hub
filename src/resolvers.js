@@ -85,8 +85,8 @@ module.exports = {
     Period: {
         coreArea: ( period, _, {dataSources}) =>
             dataSources.placeAPI.getPlacesByIds({ placeIds: period.coreAreaIds }),
-        meanings: (period, {specific, language}, {dataSources}) =>
-            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.hasMeanings, language: language||"de", type: specific||undefined }),
+        senses: (period, {typeOfSense, language}, {dataSources}) =>
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.hasMeanings, language: language||"de", type: typeOfSense||undefined }),
         follows: ( period, {language}, {dataSources}) =>
             dataSources.periodAPI.getPeriodsByIds({ periodIds: period.followsIds, language: language||"de" }),
         followedBy: ( period, {language}, {dataSources}) =>
