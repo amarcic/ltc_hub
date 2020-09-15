@@ -55,14 +55,14 @@ class EntityAPI extends RESTDataSource {
                 ? entity.places.map( place => {
                     return{
                         placeId: place.gazetteerId,
-                        locationType: place.relation ? place.relation : "unspecified"
+                        locationType: place.relation || "unspecified"
                     }
                 } )
                 : "",
-            relatedEntities: entity.connectedEntities ? entity.connectedEntities : "",
+            relatedEntities: entity.connectedEntities || "",
             type: entity.type,
             periodIds: this.temporalFromArachneSections(entity.sections),
-            periodName: entity.facet_datierungepoche ? entity.facet_datierungepoche : []
+            periodName: entity.facet_datierungepoche || []
         };
     }
 

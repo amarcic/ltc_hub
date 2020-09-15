@@ -94,6 +94,8 @@ module.exports = {
         partOf: ( period, {language}, {dataSources}) =>
             dataSources.periodAPI.getPeriodsByIds({ periodIds: period.isPartOfIds, language: language||"de" }),
         parts: ( period, {language}, {dataSources}) =>
-            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.hasPartIds, language: language|| "de" })
+            dataSources.periodAPI.getPeriodsByIds({ periodIds: period.hasPartIds, language: language|| "de" }),
+        periodContext: ( period, {language}, {dataSources}) =>
+            dataSources.periodAPI.getPeriodContext({parentPeriodId: period.isPartOfIds[0], resultArray: []})
     }
 }

@@ -15,7 +15,7 @@ class PeriodAPI extends RESTDataSource {
             begin: period.resource.hasTimespan
                     && period.resource.hasTimespan[0].begin
                 ? period.resource.hasTimespan[0].begin.at
-                : "*",
+                : "",
             end: period.resource.hasTimespan
                     && period.resource.hasTimespan[0].end
                     && period.resource.hasTimespan[0].end.at
@@ -51,6 +51,17 @@ class PeriodAPI extends RESTDataSource {
         const chronOntologyId = response.results[0].resource.id;
         const reresponse = await this.getPeriodById({periodId: chronOntologyId, language: "de"});
         return reresponse;
+    }
+
+    //testing limitation: only the first parent period is fetched; language hardwired to german
+    async getPeriodContext({ parentPeriodId, resultArray }) {
+        const result = await this.getPeriodById({periodId: parentPeriodId, language: "de"});
+        const currentResultList = [result, ...resultArray];
+        if (result.isPartOfIds) {
+            return await this.getPeriodContext({ parentPeriodId: result.isPartOfIds[0], resultArray: currentResultList })
+        } else {
+            return currentResultList;
+        }
     }
 }
 
