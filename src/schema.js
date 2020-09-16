@@ -113,6 +113,7 @@ const typeDefs = gql`
         places(ids: [ID]!): [Place]!
         archaeologicalSites(searchString: String, coordinates: [String]): [Place]!
         sitesByRegion( searchString: String, id: ID! ): [Place]
+        periodById(id: [ID]!): Period
     }
 `;
 
