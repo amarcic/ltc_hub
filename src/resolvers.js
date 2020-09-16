@@ -98,6 +98,6 @@ module.exports = {
         parts: ( period, {language}, {dataSources}) =>
             dataSources.periodAPI.getPeriodsByIds({ periodIds: period.hasPartIds, language: language|| "de" }),
         periodContext: ( period, {language}, {dataSources}) =>
-            dataSources.periodAPI.getPeriodContext({parentPeriodId: period.isPartOfIds[0], resultArray: []})
+            dataSources.periodAPI.getPeriodContext({parentPeriodId: period.isPartOfIds[0], resultArray: [], openBranches: period.isPartOfIds.length>1 ? period.isPartOfIds.slice(1) : []})
     }
 }

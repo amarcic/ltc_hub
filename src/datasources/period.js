@@ -54,14 +54,16 @@ class PeriodAPI extends RESTDataSource {
     }
 
     //testing limitation: only tested with single parent; language hardwired to german
-    async getPeriodContext({ parentPeriodId, resultArray }) {
+    async getPeriodContext({ parentPeriodId, resultArray, openBranches }) {
         const result = await this.getPeriodById({periodId: parentPeriodId, language: "de"});
         const currentResultList = [result, ...resultArray];
-        if (result.isPartOfIds) {
-            for (let id in result.isPartOfIds) {
-                return this.getPeriodContext({ parentPeriodId: result.isPartOfIds[id], resultArray: currentResultList })
-            }
-            //return await this.getPeriodContext({ parentPeriodId: result.isPartOfIds[0], resultArray: currentResultList })
+
+        let branches = result.isPartOfIds
+            ? [...result.isPartOfIds, ...openBranches]
+            : openBranches;
+
+        if (/*result.isPartOfIds||*/branches.length>0) {
+            return this.getPeriodContext({ parentPeriodId: branches.shift(), resultArray: currentResultList, openBranches: branches })
         } else {
             return currentResultList;
         }
