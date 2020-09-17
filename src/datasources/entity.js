@@ -32,8 +32,10 @@ class EntityAPI extends RESTDataSource {
     //this function collects linked ChronOntology Ids from dating objects in sections in arachne response json
     temporalFromArachneSections(sectionsArray) {
         const datingStrings = [];
+        let wholeString = "";
         sectionsArray && sectionsArray.forEach( section => section.content.forEach( object => {
             if(object.label==="Datierung") {
+                wholeString = object.content[0].value.toString();
                 let capture = object.content[0].value.toString().match(/\/period\/(\w+)/g);
                 if (Array.isArray(capture))
                     datingStrings.push(...capture);
@@ -42,7 +44,7 @@ class EntityAPI extends RESTDataSource {
         ) );
         const uniqueDatingStrings = [...new Set(datingStrings)];
         const ChronOntologyIds = uniqueDatingStrings && uniqueDatingStrings.map( string => string.slice(8) );
-        return ChronOntologyIds;
+        return { ids: ChronOntologyIds, text: wholeString};
     }
 
     entityReducer(entity) {
@@ -61,8 +63,9 @@ class EntityAPI extends RESTDataSource {
                 : "",
             relatedEntities: entity.connectedEntities || "",
             type: entity.type,
-            periodIds: this.temporalFromArachneSections(entity.sections),
-            periodName: entity.facet_datierungepoche || []
+            periodIds: this.temporalFromArachneSections(entity.sections).ids,
+            periodName: entity.facet_datierungepoche || [],
+            onDating: this.temporalFromArachneSections(entity.sections).text
         };
     }
 

@@ -25,7 +25,7 @@ module.exports = {
         sitesByRegion: (_, {id, searchString }, {dataSources}) =>
             dataSources.placeAPI.getArchaeologicalSitesByRegion({ searchString: searchString, regionId: id }),
         periodById: (_, {id}, {dataSources}) =>
-            dataSources.periodAPI.getPeriodById({periodId: id })
+            dataSources.periodAPI.getPeriodById({periodId: id, language: "de"})
     },
     Entity: {
         spatial: ( entity, { relations }, {dataSources}) =>
