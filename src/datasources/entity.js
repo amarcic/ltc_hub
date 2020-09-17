@@ -38,8 +38,11 @@ class EntityAPI extends RESTDataSource {
             if(object.label==="Datierung") {
                 wholeString = object.content[0].value.toString();
                 let capture = wholeString.match(/\/period\/(\w+)/g);
-                let captureDate = wholeString.match(/([0-9]+\. Jh\. [vn]?\. Chr)/g);
-                dateArray = Array.isArray(captureDate)? captureDate : [];
+                let captureDate = wholeString
+                                    .match(/(Original: |Replik: |[1-4]+. Viertel, |[1-2]. Hälfte, |[1-3]. Drittel, |um [0-9]+ [nv]?. Chr|[0-9]+\. Jh\. [vn]?\. Chr)/g);
+                if (Array.isArray(captureDate))
+                    dateArray = captureDate;
+                //dateArray = Array.isArray(captureDate)? captureDate : [];
                 if (Array.isArray(capture))
                     datingStrings.push(...capture);
             }
