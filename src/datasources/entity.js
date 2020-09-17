@@ -33,10 +33,13 @@ class EntityAPI extends RESTDataSource {
     temporalFromArachneSections(sectionsArray) {
         const datingStrings = [];
         let wholeString = "";
+        let dateArray = [];
         sectionsArray && sectionsArray.forEach( section => section.content.forEach( object => {
             if(object.label==="Datierung") {
                 wholeString = object.content[0].value.toString();
-                let capture = object.content[0].value.toString().match(/\/period\/(\w+)/g);
+                let capture = wholeString.match(/\/period\/(\w+)/g);
+                let captureDate = wholeString.match(/([0-9]+\. Jh\. [vn]?\. Chr)/g);
+                dateArray = Array.isArray(captureDate)? captureDate : [];
                 if (Array.isArray(capture))
                     datingStrings.push(...capture);
             }
@@ -44,7 +47,7 @@ class EntityAPI extends RESTDataSource {
         ) );
         const uniqueDatingStrings = [...new Set(datingStrings)];
         const ChronOntologyIds = uniqueDatingStrings && uniqueDatingStrings.map( string => string.slice(8) );
-        return { ids: ChronOntologyIds, text: wholeString};
+        return { ids: ChronOntologyIds, text: wholeString, date: dateArray};
     }
 
     entityReducer(entity) {
@@ -65,7 +68,7 @@ class EntityAPI extends RESTDataSource {
             type: entity.type,
             periodIds: this.temporalFromArachneSections(entity.sections).ids,
             periodName: entity.facet_datierungepoche || [],
-            onDating: this.temporalFromArachneSections(entity.sections).text
+            onDating: this.temporalFromArachneSections(entity.sections).date
         };
     }
 
