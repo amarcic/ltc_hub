@@ -39,7 +39,7 @@ class EntityAPI extends RESTDataSource {
                 wholeString = object.content[0].value.toString();
                 let capture = wholeString.match(/\/period\/(\w+)/g);
                 let captureDate = wholeString
-                                    .match(/(Original: |Replik: |[1-4]+. Viertel, |[1-2]. Hälfte, |[1-3]. Drittel, |um [0-9]+ [nv]?. Chr|[0-9]+\. Jh\. [vn]?\. Chr)/g);
+                                    .match(/(Antik: |Replik: |Original: )?(([1-4]+\. Viertel|[1-2]\. Hälfte|Mitte|[1-3]\. Drittel)( |, | des )?)?([0-9]\. (Jahrzehnt|Jzehnt), )?(um [0-9]+ [nv]?\. Chr|[0-9]+\. (Jh|Jhs)\. [vn]?\. Chr\.)( \((um|nach|vor) [0-9]+( v\. Chr.)?\))?/g);
                 if (Array.isArray(captureDate))
                     dateArray = captureDate;
                 //dateArray = Array.isArray(captureDate)? captureDate : [];
@@ -71,7 +71,8 @@ class EntityAPI extends RESTDataSource {
             type: entity.type,
             periodIds: this.temporalFromArachneSections(entity.sections).ids,
             periodName: entity.facet_datierungepoche || [],
-            onDating: this.temporalFromArachneSections(entity.sections).date
+            onDating: this.temporalFromArachneSections(entity.sections).text,
+            dating:this.temporalFromArachneSections(entity.sections).date
         };
     }
 

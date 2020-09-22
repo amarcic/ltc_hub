@@ -19,7 +19,8 @@ const typeDefs = gql`
         temporalArachne: Period
         periodName: [String]
         type: String
-        onDating: [String]
+        onDating: String
+        dating: [String]
     }
     type Subject {
         identifier: ID!
