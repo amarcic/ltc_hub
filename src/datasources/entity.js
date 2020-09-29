@@ -39,7 +39,7 @@ class EntityAPI extends RESTDataSource {
                 wholeString = object.content[0].value.toString();
                 let capture = wholeString.match(/\/period\/(\w+)/g);
                 let captureDate = wholeString
-                                    .match(/(\w+: )?(([1-4]+\. Viertel|[1-2]\. Hälfte|Mitte|Ende\/spätes|Spätes|Anfang\/frühes|Ende|[1-3]\. Drittel)( |, | des )?)?([0-9]\. (Jahrzehnt|Jzehnt), )?(um [0-9-]+ [nv]?\. Chr|[0-9 \-\.]+ (Jh\.|Jhs\.|Jahrhundert) [vn]?\. Chr\.)( \((um|nach|vor|gegen|ca.) [0-9-]+( v\. Chr.)?\))?/g);
+                                    .match(/(\w+: )?(([1-4]+\. Viertel|[1-2]\. Hälfte|Mitte|Ende\/spätes|Spätes|Anfang\/frühes|Ende|[1-3]\. Drittel)( |, | des )?)?([0-9]\. (Jahrzehnt|Jzehnt), )?(um [0-9-]+ [nv]?\. Chr|([0-9]\.?(-| - ))?[0-9\.]+ (Jh\.|Jhs\.|Jahrhundert|Jt\.) [vn]?\. Chr)( \((um|nach|vor|gegen|ca.) [0-9-]+( v\. Chr)?\))?/g);
                 if (Array.isArray(captureDate))
                     dateArray = captureDate;
                 //dateArray = Array.isArray(captureDate)? captureDate : [];
