@@ -37,7 +37,7 @@ class EntityAPI extends RESTDataSource {
             /(\w+: )?(([1-4]+\. Viertel|[1-2]\. Hälfte|Mitte|Ende\/spätes|Spätes|Anfang\/frühes|Ende|[1-3]\. Drittel)( |, | des )?)?([0-9]\. (Jahrzehnt|Jzehnt), )?(um [0-9-]+ [nv]?\. Chr|([0-9]\.?(-| - ))?[0-9\.]+ (Jh\.|Jhs\.|Jahrhundert|Jt\.) [vn]?\. Chr)( \((um|nach|vor|gegen|ca.) [0-9-]+( v\. Chr)?\))?/g;
         */
         const regexNew =
-            /((\w+( \(\w+\))?: )?(\d\. )?(Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende), )?(\d\. (Jzehnt|Jahrzehnt), )?(\d+\.?\ ?- ?)?(\d+\.?)( Jh\.?| Jhs\.?| Jahrhundert| Jt\.?)? ([vn]\. Chr\.?)( \((um |nach |vor |gegen |ca\. )?\d+\))?/g;
+            /(?<about>\w+(?: \(\w+\))?: )?(?:(?<fractionCentMilDigit>\d\. )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?, )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillenium> Jh\.?| Jhs\.?| Jahrhundert| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
         const datingStrings = [];
         let wholeString = "";
         let dateArray = [];
@@ -128,7 +128,7 @@ class EntityAPI extends RESTDataSource {
         const projectsConcat = projects && projects.length>0
                                 ? ` AND ` + projects.map( project => `facet_bestandsname:${project}` ).join(' OR ')
                                 : "";
-        const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
+        //const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
         let params = {
             q: `${searchStr} ${projectsConcat} ${typesFilter}`
         }
@@ -154,6 +154,7 @@ class EntityAPI extends RESTDataSource {
     }
 
     //not working correctly; not needed right now
+    /*
     async getEntitiesPeriodIdsByLocationId({ locationId, types }) {
         const typesFilter = types
             ? types.map( type => `fq=facet_kategorie:"${type}"`).join("&")
@@ -168,14 +169,15 @@ class EntityAPI extends RESTDataSource {
         const flatPeriodIds = periodIds.length > 0 ? periodIds.reduce( (acc, arr) => [ ...acc, ...arr] ) : periodIds;
         const uniquePeriodIds = [...new Set(flatPeriodIds)];
         return uniquePeriodIds;
-        /*if (response.entities) {
-            return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId, types: types })
-                .then( entity => entity && entity.periodIds)
-                .then( arrayOfPeriodIdsArrays =>
-                    arrayOfPeriodIdsArrays && arrayOfPeriodIdsArrays.reduce( (accumulator, array ) => [ ...accumulator, ...array ] ))
-            );
-        }*/
+        //if (response.entities) {
+        //    return response.entities.map( entity => this.getEntityById({ entityId: entity.entityId, types: types })
+        //        .then( entity => entity && entity.periodIds)
+        //        .then( arrayOfPeriodIdsArrays =>
+        //            arrayOfPeriodIdsArrays && arrayOfPeriodIdsArrays.reduce( (accumulator, array ) => [ ...accumulator, ...array ] ))
+        //    );
+        ///
     }
+    */
 
     // for some gazetteer Ids: when accessing the spatial property of the entities an error occurs
     getEntitiesByLocationIds({ locationIds }) {
