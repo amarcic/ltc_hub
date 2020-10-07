@@ -1,5 +1,5 @@
 const { RESTDataSource } = require('apollo-datasource-rest');
-const { dateParserArachne } = require('../serviceFunctions');
+const { dateParserArachne, extractChronOntologyIds, extractDatingSections, matchSectionSelection } = require('../serviceFunctions');
 
 const valueMapRelatedObjects = {
     Einzelobjekte: 'Einzelobjekte',
@@ -39,20 +39,26 @@ class EntityAPI extends RESTDataSource {
         const regexNew =
             /(?<about>\w+(?: \(\w+\))?: )?(?:(?<fractionCentMilDigit>\d\. )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?, )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillenium> Jh\.?| Jhs\.?| Jahrhundert| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
         const datingStrings = [];
+        const matchSectionSelection = (sectionLabel) => {
+            return sectionLabel==="Informationen zum Objekt"
+                    ||sectionLabel==="Informationen zur Topographie"
+        }
         let wholeString = "";
         let dateArray = [];
-        sectionsArray && sectionsArray.forEach( section => section.content.forEach( object => {
-            if(object.label==="Datierung") {
-                wholeString = object.content[0].value.toString();
-                let capture = wholeString.match(/\/period\/(\w+)/g);
-                let captureDate = wholeString
-                                    .match(regexNew);
-                if (Array.isArray(captureDate))
-                    dateArray = captureDate;
-                //dateArray = Array.isArray(captureDate)? captureDate : [];
-                if (Array.isArray(capture))
-                    datingStrings.push(...capture);
-            }
+        sectionsArray && sectionsArray.forEach( section =>
+            matchSectionSelection(section.label)
+            &&section.content.forEach( object => {
+                if(object.label==="Datierung") {
+                    wholeString = object.content[0].value.toString();
+                    let capture = wholeString.match(/\/period\/(\w+)/g);
+                    let captureDate = wholeString
+                                        .match(regexNew);
+                    if (Array.isArray(captureDate))
+                        dateArray = captureDate;
+                    //dateArray = Array.isArray(captureDate)? captureDate : [];
+                    if (Array.isArray(capture))
+                        datingStrings.push(...capture);
+                }
             }
         ) );
         const uniqueDatingStrings = [...new Set(datingStrings)];
@@ -77,11 +83,13 @@ class EntityAPI extends RESTDataSource {
                 : "",
             relatedEntities: entity.connectedEntities || "",
             type: entity.type,
-            periodIds: this.temporalFromArachneSections(entity.sections).ids,
+            //periodIds: this.temporalFromArachneSections(entity.sections).ids,
+            periodIds: extractChronOntologyIds(extractDatingSections(entity.sections, matchSectionSelection)),
             periodName: entity.facet_datierungepoche || [],
-            onDating: datingObj.text,
-            dating:datingObj.date,
-            datingSpan: dateParserArachne(datingObj.date)
+            //onDating: datingObj.text,
+            onDating: extractDatingSections(entity.sections, matchSectionSelection)
+            //dating:datingObj.date,
+            //datingSpan: dateParserArachne(datingObj.date)
         };
     }
 
