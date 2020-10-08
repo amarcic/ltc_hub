@@ -1,5 +1,5 @@
 const { RESTDataSource } = require('apollo-datasource-rest');
-const { dateParserArachne, getDating, extractDatingSections, matchSectionSelection, getIdsFromDatings } = require('../serviceFunctions');
+const { dateParserArachne, extractDatingSections, extractChronOntologyIds, extractDatings, matchSectionSelection } = require('../serviceFunctions');
 
 const valueMapRelatedObjects = {
     Einzelobjekte: 'Einzelobjekte',
@@ -31,11 +31,7 @@ class EntityAPI extends RESTDataSource {
     }
 
     //this function collects linked ChronOntology Ids from dating objects in sections in arachne response json
-    temporalFromArachneSections(sectionsArray) {
-        /*
-        const regexOld =
-            /(\w+: )?(([1-4]+\. Viertel|[1-2]\. Hälfte|Mitte|Ende\/spätes|Spätes|Anfang\/frühes|Ende|[1-3]\. Drittel)( |, | des )?)?([0-9]\. (Jahrzehnt|Jzehnt), )?(um [0-9-]+ [nv]?\. Chr|([0-9]\.?(-| - ))?[0-9\.]+ (Jh\.|Jhs\.|Jahrhundert|Jt\.) [vn]?\. Chr)( \((um|nach|vor|gegen|ca.) [0-9-]+( v\. Chr)?\))?/g;
-        */
+    /*temporalFromArachneSections(sectionsArray) {
         const regexNew =
             /(?<about>[\wöäü?ÖÄÜ]+(?: \([\wöäü?ÖÄÜ]+\))?: )?(?:(?<fractionCentMilDigit>\d\. )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?, )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillenium> Jh\.?| Jhs\.?| Jahrhundert| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
         const datingStrings = [];
@@ -64,12 +60,12 @@ class EntityAPI extends RESTDataSource {
         const uniqueDatingStrings = [...new Set(datingStrings)];
         const ChronOntologyIds = uniqueDatingStrings && uniqueDatingStrings.map( string => string.slice(8) );
         return { ids: ChronOntologyIds, text: wholeString, date: dateArray};
-    }
+    }*/
 
     entityReducer(entity) {
         if(!entity) return;
+        const datingArray = extractDatingSections(entity.sections, matchSectionSelection);
         //actual reducer
-        const datingObj = this.temporalFromArachneSections(entity.sections);
         return{
             identifier: entity.entityId,
             name: entity.title,
@@ -83,13 +79,10 @@ class EntityAPI extends RESTDataSource {
                 : "",
             relatedEntities: entity.connectedEntities || "",
             type: entity.type,
-            //periodIds: this.temporalFromArachneSections(entity.sections).ids,
-            periodIds: getIdsFromDatings(entity.sections),
+            periodIds: extractChronOntologyIds(datingArray),
             periodName: entity.facet_datierungepoche || [],
-            //onDating: datingObj.text,
-            onDating: extractDatingSections(entity.sections, matchSectionSelection),
-            //dating:datingObj.date,
-            dating: getDating(entity.sections)
+            onDating: datingArray,
+            dating: extractDatings(datingArray)
             //datingSpan: dateParserArachne(datingObj.date)
         };
     }

@@ -87,5 +87,6 @@ exports.dateParserArachne = dateParserArachne;
 exports.extractDatingSections = extractDatingSections;
 exports.extractChronOntologyIds = extractChronOntologyIds;
 exports.matchSectionSelection = matchSectionSelection;
+exports.extractDatings = extractDatings;
 exports.getIdsFromDatings = getIdsFromDatings;
 exports.getDating = getDating;
