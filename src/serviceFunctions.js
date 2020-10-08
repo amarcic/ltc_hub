@@ -41,15 +41,13 @@ const extractDatingSections = (arachneSectionsArray, sectionSelectFunc) => {
 //expects an array of strings that include links to iDAI.chronontology
 //returns an array of iDAI.chronontology ids (extracted from the links in the strings)
 const extractChronOntologyIds = (datingSections) => {
-    dating = datingSections;
-    idRegex = /\/period\/(\w+)/g;
+    const dating = datingSections;
+    const idRegex = /\/period\/(\w+)/g;
 
-    datingString = dating.toString();
-    uriArray = datingString.match(idRegex);
-    idArray = uriArray && uriArray.map( string => string.slice(8) );
+    const datingString = dating.toString();
+    const uriArray = datingString.match(idRegex);
+    const idArray = uriArray && uriArray.map( string => string.slice(8) );
     return idArray;
-
-
 
     /*for later
     if(Array.isArray(dating)) {
@@ -62,19 +60,32 @@ const extractChronOntologyIds = (datingSections) => {
 
     }*/
 }
-/*
-wholeString = object.content[0].value.toString();
-                    let capture = wholeString.match(/\/period\/(\w+)/g);
-                    let captureDate = wholeString
-                                        .match(regexNew);
-                    if (Array.isArray(captureDate))
-                        dateArray = captureDate;
-                    //dateArray = Array.isArray(captureDate)? captureDate : [];
-                    if (Array.isArray(capture))
-                        datingStrings.push(...capture);
-*/
+
+const getIdsFromDatings = (sections) => {
+    return extractChronOntologyIds(extractDatingSections(sections, matchSectionSelection));
+}
+
+const extractDatings = (datingSections) => {
+    const datingTexts = datingSections;
+    const dateRegEx =
+        /(?<about>[\wöäü?ÖÄÜ]+(?: \([\wöäü?ÖÄÜ]+\))?: )?(?:(?<fractionCentMilDigit>\d\. )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?, )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillenium> Jh\.?| Jhs\.?| Jahrhundert| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
+    let datingArray = [];
+    datingTexts.forEach( dating => {
+            extractedDatings=dating.match(dateRegEx);
+            if (Array.isArray(extractedDatings))
+                datingArray = [...datingArray, ...extractedDatings];
+        }
+    );
+    return datingArray;
+}
+
+const getDating = (sections) => {
+    return extractDatings(extractDatingSections(sections, matchSectionSelection));
+}
 
 exports.dateParserArachne = dateParserArachne;
 exports.extractDatingSections = extractDatingSections;
 exports.extractChronOntologyIds = extractChronOntologyIds;
 exports.matchSectionSelection = matchSectionSelection;
+exports.getIdsFromDatings = getIdsFromDatings;
+exports.getDating = getDating;

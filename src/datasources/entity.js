@@ -1,5 +1,5 @@
 const { RESTDataSource } = require('apollo-datasource-rest');
-const { dateParserArachne, extractChronOntologyIds, extractDatingSections, matchSectionSelection } = require('../serviceFunctions');
+const { dateParserArachne, getDating, extractDatingSections, matchSectionSelection, getIdsFromDatings } = require('../serviceFunctions');
 
 const valueMapRelatedObjects = {
     Einzelobjekte: 'Einzelobjekte',
@@ -37,7 +37,7 @@ class EntityAPI extends RESTDataSource {
             /(\w+: )?(([1-4]+\. Viertel|[1-2]\. Hälfte|Mitte|Ende\/spätes|Spätes|Anfang\/frühes|Ende|[1-3]\. Drittel)( |, | des )?)?([0-9]\. (Jahrzehnt|Jzehnt), )?(um [0-9-]+ [nv]?\. Chr|([0-9]\.?(-| - ))?[0-9\.]+ (Jh\.|Jhs\.|Jahrhundert|Jt\.) [vn]?\. Chr)( \((um|nach|vor|gegen|ca.) [0-9-]+( v\. Chr)?\))?/g;
         */
         const regexNew =
-            /(?<about>\w+(?: \(\w+\))?: )?(?:(?<fractionCentMilDigit>\d\. )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?, )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillenium> Jh\.?| Jhs\.?| Jahrhundert| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
+            /(?<about>[\wöäü?ÖÄÜ]+(?: \([\wöäü?ÖÄÜ]+\))?: )?(?:(?<fractionCentMilDigit>\d\. )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?, )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillenium> Jh\.?| Jhs\.?| Jahrhundert| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
         const datingStrings = [];
         const matchSectionSelection = (sectionLabel) => {
             return sectionLabel==="Informationen zum Objekt"
@@ -84,11 +84,12 @@ class EntityAPI extends RESTDataSource {
             relatedEntities: entity.connectedEntities || "",
             type: entity.type,
             //periodIds: this.temporalFromArachneSections(entity.sections).ids,
-            periodIds: extractChronOntologyIds(extractDatingSections(entity.sections, matchSectionSelection)),
+            periodIds: getIdsFromDatings(entity.sections),
             periodName: entity.facet_datierungepoche || [],
             //onDating: datingObj.text,
-            onDating: extractDatingSections(entity.sections, matchSectionSelection)
+            onDating: extractDatingSections(entity.sections, matchSectionSelection),
             //dating:datingObj.date,
+            dating: getDating(entity.sections)
             //datingSpan: dateParserArachne(datingObj.date)
         };
     }
