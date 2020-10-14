@@ -94,7 +94,11 @@ const getDatingHumReadable = (datingArray) => {
 }
 
 const getDatingSpan = (datingArray) => {
-    let matches = datingArray.map( dating => dating.groups );
+    if (datingArray.length<1) return;
+
+    let matches = datingArray
+        //.filter( dating => Array.isArray(dating)&&dating.length > 0)
+        .map( dating => dating[0] && dating.groups );
     let timespans = [];
 
     for (let match of matches) {

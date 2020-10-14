@@ -1,5 +1,5 @@
 const { RESTDataSource } = require('apollo-datasource-rest');
-const { extractDatingSections, extractChronOntologyIds, extractDating, matchSectionSelection, getDatingHumReadable, getDatingSpan } = require('../datingExtraction');
+const { extractDatingSections, extractChronOntologyIds, matchSectionSelection } = require('../datingExtraction');
 
 const valueMapRelatedObjects = {
     Einzelobjekte: 'Einzelobjekte',
@@ -33,7 +33,8 @@ class EntityAPI extends RESTDataSource {
     entityReducer(entity) {
         if(!entity) return;
         const datingStringArray = extractDatingSections(entity.sections, matchSectionSelection);
-        const datingArray = extractDating(datingStringArray);
+        //const datingArray = extractDating(datingStringArray);
+
         //actual reducer
         return{
             identifier: entity.entityId,
