@@ -1,5 +1,5 @@
 const { RESTDataSource } = require('apollo-datasource-rest');
-const { dateParserArachne, extractDatingSections, extractChronOntologyIds, extractDatings, matchSectionSelection } = require('../serviceFunctions');
+const { dateParserArachne, extractDatingSections, extractChronOntologyIds, extractDating, matchSectionSelection, getDatingHumReadable } = require('../datingExtraction');
 
 const valueMapRelatedObjects = {
     Einzelobjekte: 'Einzelobjekte',
@@ -64,7 +64,8 @@ class EntityAPI extends RESTDataSource {
 
     entityReducer(entity) {
         if(!entity) return;
-        const datingArray = extractDatingSections(entity.sections, matchSectionSelection);
+        const datingStringArray = extractDatingSections(entity.sections, matchSectionSelection);
+        const datingArray = extractDating(datingStringArray);
         //actual reducer
         return{
             identifier: entity.entityId,
@@ -81,8 +82,9 @@ class EntityAPI extends RESTDataSource {
             type: entity.type,
             periodIds: extractChronOntologyIds(datingArray),
             periodName: entity.facet_datierungepoche || [],
-            onDating: datingArray,
-            dating: extractDatings(datingArray)
+            onDating: datingStringArray,
+            dating: getDatingHumReadable(datingArray)
+            //dating: datingArray.map( datingArr => datingArr[0] )
             //datingSpan: dateParserArachne(datingObj.date)
         };
     }

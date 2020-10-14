@@ -101,3 +101,4 @@ exports.matchSectionSelection = matchSectionSelection;
 exports.extractDating = extractDating;
 exports.getIdsFromDating = getIdsFromDating;
 exports.getDating = getDating;
+exports.getDatingHumReadable = getDatingHumReadable;
