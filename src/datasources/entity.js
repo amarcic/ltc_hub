@@ -30,38 +30,6 @@ class EntityAPI extends RESTDataSource {
         this.baseURL = 'https://arachne.dainst.org/data/';
     }
 
-    //this function collects linked ChronOntology Ids from dating objects in sections in arachne response json
-    /*temporalFromArachneSections(sectionsArray) {
-        const regexNew =
-            /(?<about>[\wöäü?ÖÄÜ]+(?: \([\wöäü?ÖÄÜ]+\))?: )?(?:(?<fractionCentMilDigit>\d\. )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?, )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillenium> Jh\.?| Jhs\.?| Jahrhundert| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
-        const datingStrings = [];
-        const matchSectionSelection = (sectionLabel) => {
-            return sectionLabel==="Informationen zum Objekt"
-                    ||sectionLabel==="Informationen zur Topographie"
-        }
-        let wholeString = "";
-        let dateArray = [];
-        sectionsArray && sectionsArray.forEach( section =>
-            matchSectionSelection(section.label)
-            &&section.content.forEach( object => {
-                if(object.label==="Datierung") {
-                    wholeString = object.content[0].value.toString();
-                    let capture = wholeString.match(/\/period\/(\w+)/g);
-                    let captureDate = wholeString
-                                        .match(regexNew);
-                    if (Array.isArray(captureDate))
-                        dateArray = captureDate;
-                    //dateArray = Array.isArray(captureDate)? captureDate : [];
-                    if (Array.isArray(capture))
-                        datingStrings.push(...capture);
-                }
-            }
-        ) );
-        const uniqueDatingStrings = [...new Set(datingStrings)];
-        const ChronOntologyIds = uniqueDatingStrings && uniqueDatingStrings.map( string => string.slice(8) );
-        return { ids: ChronOntologyIds, text: wholeString, date: dateArray};
-    }*/
-
     entityReducer(entity) {
         if(!entity) return;
         const datingStringArray = extractDatingSections(entity.sections, matchSectionSelection);
@@ -82,9 +50,9 @@ class EntityAPI extends RESTDataSource {
             type: entity.type,
             periodIds: extractChronOntologyIds(datingStringArray),
             periodName: entity.facet_datierungepoche || [],
-            onDating: datingStringArray,
-            dating: getDatingHumReadable(datingArray),
-            datingSpan: getDatingSpan(datingArray)
+            onDating: datingStringArray
+            //dating: getDatingHumReadable(datingArray),
+            //datingSpan: getDatingSpan(datingArray)
         };
     }
 

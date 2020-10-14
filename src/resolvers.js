@@ -1,3 +1,5 @@
+const { extractDating, getDatingSpan, getDatingHumReadable } = require('./datingExtraction');
+
 module.exports = {
     Query: {
         entity: (_, { id }, {dataSources}) =>
@@ -41,7 +43,15 @@ module.exports = {
             //limiting provenance to "Arachne" in most cases identifies the iDAI.chronontology periods associated with datings in iDAI.arachne
             dataSources.periodAPI.getPeriodByNameAndProvenance({ periodName: entity.periodName, provenance: "Arachne" }),
         related: ( entity, { types }, {dataSources}) =>
-            dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities, types: types })
+            dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities, types: types }),
+        dating: ( entity, _) => {
+         const datingArray = extractDating(entity.onDating);
+         return getDatingHumReadable(datingArray)
+        },
+        datingSpan: ( entity, _) => {
+            const datingArray = extractDating(entity.onDating);
+            return getDatingSpan(datingArray);
+        }
     },
     Place: {
         temporal:  /*async*/ ( place, { language }, {dataSources}) => {
@@ -55,7 +65,7 @@ module.exports = {
                                 //filter duplicate period ids: 1.sort 2.filter repeated
                                 .sort()
                                 .filter( (item, position, array ) =>
-                                    !position || item != array[position-1] )
+                                    !position || item !== array[position-1] )
                                 //fetch period data for each id
                                 .map( periodId =>
                                     dataSources.periodAPI.getPeriodById({ periodId: periodId, language: language? language : "de"})
