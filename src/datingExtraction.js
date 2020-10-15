@@ -68,7 +68,7 @@ const getIdsFromDating = (sections) => {
 const extractDating = (datingSections) => {
     const datingTexts = datingSections;
     const dateRegEx =
-        /(?<about>[\wöäü?ÖÄÜ]+(?: \([\wöäü?ÖÄÜ]+\))?: )?(?:(?<fractionCentMilDigit>\d\. )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?, )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillenium> Jh\.?| Jhs\.?| Jahrhundert| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
+        /(?<about>[\wöäü?ÖÄÜ]+(?: \([\wöäü?ÖÄÜ]+\))?: )?(?:(?<fractionCentMilDigit>\d\. )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?, )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillennium> Jh\.?| Jhs\.?| Jahrhundert| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
     let datingArray = [];
     let extractedDating;
     datingTexts.forEach( dating => {
@@ -105,7 +105,7 @@ const getDatingSpan = (datingArray) => {
         //initialise timespan array
         let timespan = [0, 99];
 
-        //Detailangabe in Klammern, evtl. mit 'circa' o.ä.
+        //parse detailed dating in parentheses
         if (match.detailDigit) {
             if ((match.detailMod === "um ") || (match.detailMod === "gegen ") || (match.detailMod === "circa ") || (match.detailMod === "ca. ") || (match.detailMod === "ca ") || (match.detailMod === "~")) {
                 timespan[0] = parseInt(match.detailDigit.split(".")[0]) - 10; //TODO: how big should the fuzzy circa timespan be?
@@ -118,7 +118,7 @@ const getDatingSpan = (datingArray) => {
             return timespan;
         } else {
             switch (match.fraction) {
-                //Anfang, Mitte, Ende
+                //parse early, middle, late etc.
                 case "Anfang/frühes":
                 case "Anfang":
                 case "Frühes":
@@ -137,17 +137,18 @@ const getDatingSpan = (datingArray) => {
                     timespan[0] = 66; //75?
                     timespan[1] = 99;
                     break;
-                // 1.-10. Jahrzehnt
+                //parse decade
                 case "Jahrzehnt":
                 case "Jzehnt":
                 case "Jz":
+                    if(!match.fractionCentMilDigit) break;
                     if (parseInt(match.fractionCentMilDigit.split(".")[0]) <= 10) {
-                        //falls ein Jahrzehnt von 0-9 gehen soll:
+                        //in case a decase should be 0-9:
                         timespan[0] =
                             (parseInt(match.fractionCentMilDigit.split(".")[0]) - 1) * 10;
                         timespan[1] =
                             parseInt(match.fractionCentMilDigit.split(".")[0]) * 10 - 1;
-                        //falls ein Jahrzehnt von 1-10 gehen soll:
+                        //in case a decase should be 1-10:
                         /*timespan[0] =
                             (parseInt(match.fractionCentMilDigit.split(".")[0])) * 10 -9;
                         timespan[1] =
@@ -155,7 +156,8 @@ const getDatingSpan = (datingArray) => {
                     }
                     break;
                 case "Hälfte":
-                    //1. oder 2. Hälfte
+                    //parse half
+                    if(!match.fractionCentMilDigit) break;
                     switch (parseInt(match.fractionCentMilDigit.split(".")[0])) {
                         case 1:
                             timespan[0] = 0;
@@ -170,7 +172,8 @@ const getDatingSpan = (datingArray) => {
                     }
                     break;
                 case "Drittel":
-                    //1.-3. Drittel
+                    //parse third
+                    if(!match.fractionCentMilDigit) break;
                     switch (parseInt(match.fractionCentMilDigit.split(".")[0])) {
                         case 1:
                             timespan[0] = 0;
@@ -189,7 +192,8 @@ const getDatingSpan = (datingArray) => {
                     }
                     break;
                 case "Viertel":
-                    //1.-4. Viertel
+                    //parse quarter
+                    if(!match.fractionCentMilDigit) break;
                     switch (parseInt(match.fractionCentMilDigit.split(".")[0])) {
                         case 1:
                             timespan[0] = 0;
@@ -216,8 +220,8 @@ const getDatingSpan = (datingArray) => {
             }
         }
 
-        // Jahrhundert oder Jahrtausend
-        switch (match.centuryMillenium) {
+        //parse century or millennium
+        switch (match.centuryMillennium) {
             case "Jh.":
             case " Jh.":
             case "Jh":
@@ -242,7 +246,7 @@ const getDatingSpan = (datingArray) => {
                 break;
         }
 
-        // Vorzeichen
+        //parse BC or AD
         switch (match.bcAd) {
             case "v. Chr.":
             case "v. Chr":
