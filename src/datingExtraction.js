@@ -141,28 +141,67 @@ const getDatingSpan = (datingArray) => {
                 case "Jzehnt":
                 case "Jz":
                     if(!match.fractionCentMilDigit) break;
-                    if (parseInt(match.fractionCentMilDigit.split(".")[0]) <= 10) {
-                        //in case a decase should be 0-9:
-                        timespan[0] =
-                            (parseInt(match.fractionCentMilDigit.split(".")[0]) - 1) * 10;
-                        timespan[1] =
-                            parseInt(match.fractionCentMilDigit.split(".")[0]) * 10 - 1;
-                        //in case a decase should be 1-10:
-                        /*timespan[0] =
-                            (parseInt(match.fractionCentMilDigit.split(".")[0])) * 10 -9;
-                        timespan[1] =
-                            parseInt(match.fractionCentMilDigit.split(".")[0]) * 10;*/
+                    switch (match.fractionCentMilDigit) {
+                        case "1.":
+                        case "erste":
+                        case "ersten":
+                        case "erstes":
+                            timespan[0] = 0
+                            timespan[1] = 9;
+                            break;
+                        case "2.":
+                        case "3.":
+                        case "4.":
+                        case "5.":
+                        case "6.":
+                        case "7.":
+                        case "8.":
+                        case "9.":
+                            //in case a decade should span 0-9:
+                            timespan[0] =
+                                (parseInt(match.fractionCentMilDigit.split(".")[0]) - 1) * 10;
+                            timespan[1] =
+                                parseInt(match.fractionCentMilDigit.split(".")[0]) * 10 - 1;
+                            //in case a decade should span 1-10:
+                            /*timespan[0] =
+                                (parseInt(match.fractionCentMilDigit.split(".")[0])) * 10 -9;
+                            timespan[1] =
+                                parseInt(match.fractionCentMilDigit.split(".")[0]) * 10;*/
+                            break;
+                        case "10.":
+                        case "letzte":
+                        case "letzten":
+                        case "letztes":
+                            timespan[0] = 90
+                            timespan[1] = 99;
+                            break;
+                        default:
+                            break;
                     }
                     break;
+                //parse half
                 case "Hälfte":
-                    //parse half
                     if(!match.fractionCentMilDigit) break;
-                    switch (parseInt(match.fractionCentMilDigit.split(".")[0])) {
-                        case 1:
+                    switch (match.fractionCentMilDigit) {
+                        case "1.":
+                        //case "1. ":
+                        case "erste":
+                        case "ersten":
+                        case "erster":
+                        case "erstes":
                             timespan[0] = 0;
                             timespan[1] = 49;
                             break;
-                        case 2:
+                        case "2.":
+                        //case "2. ":
+                        case "letzten":
+                        case "letzte":
+                        case "letzter":
+                        case "letztes":
+                            //case "zweite":
+                            //case "zweiten":
+                            //case "zweiter":
+                            //case "zweites":
                             timespan[0] = 50;
                             timespan[1] = 99;
                             break;
@@ -170,19 +209,30 @@ const getDatingSpan = (datingArray) => {
                             break;
                     }
                     break;
+                //parse third
                 case "Drittel":
-                    //parse third
                     if(!match.fractionCentMilDigit) break;
-                    switch (parseInt(match.fractionCentMilDigit.split(".")[0])) {
-                        case 1:
+                    switch (match.fractionCentMilDigit) {
+                        case "1.":
+                        //case "1. ":
+                        case "erste":
+                        case "ersten":
+                        case "erster":
+                        case "erstes":
                             timespan[0] = 0;
                             timespan[1] = 33;
                             break;
-                        case 2:
+                        case "2.":
+                            //case "2. ":
                             timespan[0] = 33; //?
                             timespan[1] = 66;
                             break;
-                        case 3:
+                        case "3.":
+                        //case "3. ":
+                        case "letzte":
+                        case "letzten":
+                        case "letzter":
+                        case "letztes":
                             timespan[0] = 66; //?
                             timespan[1] = 99;
                             break;
@@ -190,23 +240,31 @@ const getDatingSpan = (datingArray) => {
                             break;
                     }
                     break;
+                //parse quarter
                 case "Viertel":
-                    //parse quarter
                     if(!match.fractionCentMilDigit) break;
-                    switch (parseInt(match.fractionCentMilDigit.split(".")[0])) {
-                        case 1:
+                    switch (match.fractionCentMilDigit) {
+                        case "1.":
+                        case "erste":
+                        case "erstes":
+                        case "erster":
+                        case "ersten":
                             timespan[0] = 0;
                             timespan[1] = 24;
                             break;
-                        case 2:
+                        case "2.":
                             timespan[0] = 25;
                             timespan[1] = 49;
                             break;
-                        case 3:
+                        case "3.":
                             timespan[0] = 50;
                             timespan[1] = 74;
                             break;
-                        case 4:
+                        case "4.":
+                        case "letzte":
+                        case "letztes":
+                        case "letzter":
+                        case "letzten":
                             timespan[0] = 75;
                             timespan[1] = 99;
                             break;
