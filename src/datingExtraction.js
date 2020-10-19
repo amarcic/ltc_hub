@@ -68,7 +68,7 @@ const getIdsFromDating = (sections) => {
 const extractDating = (datingSections) => {
     const datingTexts = datingSections;
     const dateRegEx =
-        /(?<about>[\wöäü?ÖÄÜ]+(?: \([\wöäü?ÖÄÜ]+\))?: )?(?:(?:(?<fractionCentMilDigit>\d\.|letzte.?|erste.?) )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?(?:,| des| d\.) )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillennium> Jh\.?| Jhs\.?| Jahrhundert| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
+        /(?<about>[\wöäü?ÖÄÜ]+(?: \([\wöäü?ÖÄÜ]+\))?: )?(?:(?:(?<fractionCentMilDigit>\d\.|letzte.?|erste.?) )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?(?:,| des| d\.) )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillennium> Jh\.?| Jhs\.?| Jahrhundert| Jahrhunderts| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
     let datingArray = [];
     let extractedDating;
     datingTexts.forEach( dating => {
