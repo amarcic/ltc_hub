@@ -114,7 +114,11 @@ const getDatingSpan = (datingArray) => {
                 timespan[0] = parseInt(match.detailDigit.split(".")[0]);
                 timespan[1] = parseInt(match.detailDigit.split(".")[0]);
             }
-            //TODO: Should it return this timespan, regardless of if there is more information in the string before this? Probably the '-' is missing here for v. Chr.
+            if ((match.bcAd === "v. Chr.") || (match.bcAd === "v. Chr.") || (match.bcAd === "v. Chr.")) {
+                timespan[0] *= -1;
+                timespan[1] *= -1;
+            }
+            // in case there is a match.detailDigit: only match.detailDigit, match.detailMod, and match.bcAd value are evaluated
             return timespan;
         } else {
             switch (match.fraction) {
