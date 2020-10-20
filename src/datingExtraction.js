@@ -97,6 +97,7 @@ const getDatingHumReadable = (datingNestedArray) => {
     //datingNestedArray is an array of arrays, each including the dating strings from a single entry from the dating sections
     //datingNestedArray: one level depth, arrays of strings
     return datingNestedArray.map( entryArray => entryArray.map( dating => dating[0]));
+    //changed here in preceding commit
 }
 
 const getDatingSpan = (datingNestedArray) => {
