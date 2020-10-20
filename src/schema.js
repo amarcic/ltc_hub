@@ -21,7 +21,7 @@ const typeDefs = gql`
         type: String
         onDating: [String]
         dating: [[String]]
-        datingSpan: [String]
+        datingSpan: [[String]]
     }
     type Subject {
         identifier: ID!
