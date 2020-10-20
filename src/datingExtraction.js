@@ -69,7 +69,7 @@ const extractDating = (datingSections) => {
     const datingTexts = datingSections;
     const dateRegEx =
         /(?<about>[\wöäü?ÖÄÜ]+(?: \([\wöäü?ÖÄÜ]+\))?: )?(?:(?:(?<fractionCentMilDigit>\d\.|letzte.?|erste.?) )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?(?:,| des| d\.) )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillennium> Jh\.?| Jhs\.?| Jahrhundert| Jahrhunderts| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
-    let datingArray = [];
+    let datingNestedArray = [];
     let extractedDating;
     datingTexts.forEach( dating => {
             /*
@@ -77,26 +77,36 @@ const extractDating = (datingSections) => {
             if (Array.isArray(extractedDatings))
                 datingArray = [...datingArray, ...extractedDatings];
             */
+            let datingEntryArray = [];
             while ( (extractedDating = dateRegEx.exec(dating)) !== null ) {
-                datingArray.push(extractedDating);
+                datingEntryArray.push(extractedDating);
             }
+            datingNestedArray.push(datingEntryArray);
         }
     );
-    return datingArray;
+    //datingNestedArray is an array of arrays, each including the dating strings from a single entry from the dating sections
+    //datingNestedArray: one level depth, arrays of strings
+    return datingNestedArray;
 }
 
 const getDating = (sections) => {
     return extractDating(extractDatingSections(sections, matchSectionSelection));
 }
 
-const getDatingHumReadable = (datingArray) => {
-    return datingArray.map( dating => dating[0]);
+const getDatingHumReadable = (datingNestedArray) => {
+    //datingNestedArray is an array of arrays, each including the dating strings from a single entry from the dating sections
+    //datingNestedArray: one level depth, arrays of strings
+    return datingNestedArray.map( entryArray => entryArray.map( dating => dating[0]));
 }
 
-const getDatingSpan = (datingArray) => {
-    if (datingArray.length<1) return;
+const getDatingSpan = (datingNestedArray) => {
+    //datingNestedArray is an array of arrays, each including the dating strings from a single entry from the dating sections
+    //datingNestedArray: one level depth, arrays of strings
+    //the following line flattening the nested array is a temporary fix until the next push only
+    datingNestedArray = datingNestedArray.flat();
+    if (datingNestedArray.length<1) return;
 
-    let matches = datingArray
+    let matches = datingNestedArray
         //.filter( dating => Array.isArray(dating)&&dating.length > 0)
         .map( dating => dating[0] && dating.groups );
     let timespans = [];

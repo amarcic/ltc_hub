@@ -20,7 +20,7 @@ const typeDefs = gql`
         periodName: [String]
         type: String
         onDating: [String]
-        dating: [String]
+        dating: [[String]]
         datingSpan: [String]
     }
     type Subject {
