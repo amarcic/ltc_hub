@@ -105,11 +105,13 @@ const getDatingSpan = (datingNestedArray) => {
     //the following line flattening the nested array is a temporary fix until the next push only
     //datingNestedArray = datingNestedArray.flat();
     if (datingNestedArray.length<1) return;
+    const datingNestedArrayFiltered = datingNestedArray.filter( datingArray => datingArray.length>0);
     let datingSpanArray = [];
-    datingSpanArray = datingNestedArray.map( datingArray => {
+    datingSpanArray = datingNestedArrayFiltered.map( datingArray => {
     //.forEach does not work, early return from forEach is not possible; try for... of...
     //datingNestedArray.forEach( datingArray => {
 
+        //since arrays with length < 1 have been filtered out above, it should be save to discard this check
         if (datingArray.length<1) return;
 
         let matches = datingArray
