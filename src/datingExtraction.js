@@ -68,7 +68,7 @@ const getIdsFromDating = (sections) => {
 const extractDating = (datingSections) => {
     const datingTexts = datingSections;
     const dateRegEx =
-        /(?<about>[\wöäü?ÖÄÜ]+(?: \([\wöäü?ÖÄÜ]+\))?: )?(?:(?:(?<fractionCentMilDigit>\d\.|letzte.?|erste.?) )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?(?:,| des| d\.) )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillennium> Jh\.?| Jhs\.?| Jahrhundert| Jahrhunderts| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>\d+)\))?/g;
+        /(?<about>[\wöäü?ÖÄÜ]+(?: \([\wöäü?ÖÄÜ]+\))?: )?(?:(?:(?<fractionCentMilDigit>\d\.|letzte.?|erste.?) )?(?<fraction>Viertel|Drittel|Hälfte|Mitte|Ende\/spätes|Anfang\/frühes|Ende|Anfang|Jzehnt|Jahrzehnt)?(?:,| des| d\.) )?(?<yearCentMilDigit>(?:\d+\.? ?- ?)?(?:\d+\.?))(?<centuryMillennium> Jh\.?| Jhs\.?| Jahrhundert| Jahrhunderts| Jt\.?)? (?<bcAd>[vn]\. Chr\.?)(?: \((?<detailMod>ca\.? |um |nach |vor | gegen |~)?(?<detailDigit>(?:\d+ ?- ?)?\d+)\))?/g;
     let datingNestedArray = [];
     let extractedDating;
     datingTexts.forEach( dating => {
@@ -102,20 +102,16 @@ const getDatingHumReadable = (datingNestedArray) => {
 const getDatingSpan = (datingNestedArray) => {
     //datingNestedArray is an array of arrays, each including the dating strings from a single entry from the dating sections
     //datingNestedArray: one level depth, arrays of strings
-    //the following line flattening the nested array is a temporary fix until the next push only
-    //datingNestedArray = datingNestedArray.flat();
     if (datingNestedArray.length<1) return;
     const datingNestedArrayFiltered = datingNestedArray.filter( datingArray => datingArray.length>0);
     let datingSpanArray = [];
+
     datingSpanArray = datingNestedArrayFiltered.map( datingArray => {
-    //.forEach does not work, early return from forEach is not possible; try for... of...
-    //datingNestedArray.forEach( datingArray => {
 
         //since arrays with length < 1 have been filtered out above, it should be save to discard this check
         if (datingArray.length<1) return;
 
         let matches = datingArray
-            //.filter( dating => Array.isArray(dating)&&dating.length > 0)
             .map(dating => dating[0] && dating.groups);
         let timespans = [];
 
