@@ -41,24 +41,19 @@ const extractDatingSections = (arachneSectionsArray, sectionSelectFunc) => {
 //expects an array of strings that include links to iDAI.chronontology
 //returns an array of iDAI.chronontology ids (extracted from the links in the strings)
 const extractChronOntologyIds = (datingSections) => {
-    const dating = datingSections;
+
+    if (datingSections.length<1) return;
+
     const idRegex = /\/period\/(\w+)/g;
 
-    const datingString = dating.toString();
-    const uriArray = datingString.match(idRegex);
-    const idArray = uriArray && uriArray.map( string => string.slice(8) );
-    return idArray;
+    const linksNested = datingSections
+        .map( datingString => datingString.match(idRegex));
+    const idsNested = linksNested
+        .filter( links => Array.isArray(links))
+        .map( links => links.map( link => link.slice(8)));
 
-    /*for later
-    if(Array.isArray(dating)) {
-
-        dating.forEach( datingString => {
-                const chronontologyID = datingString.match(idRegex);
-            }
-        )
-    } else {
-
-    }*/
+    //temporary fix for consuming functions: .flat() until consuming functions are refactored
+    return idsNested.flat();
 }
 
 const getIdsFromDating = (sections) => {

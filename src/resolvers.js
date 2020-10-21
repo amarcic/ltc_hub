@@ -37,7 +37,6 @@ module.exports = {
             // replace the hardcoded ID below later
             dataSources.subjectAPI.getSubjectById({ subjectId: "_8bca4bf1"}),
         temporal: ( entity, { meanings, language }, {dataSources}) =>
-            //chronontology ID is fixed for now since iDAI.objects has no IDs, just period names
             dataSources.periodAPI.getPeriodsByIds({ periodIds: entity.periodIds, meanings: meanings || "all", language: language? language : "de" }),
         temporalArachne: ( entity, _, {dataSources}) =>
             //limiting provenance to "Arachne" in most cases identifies the iDAI.chronontology periods associated with datings in iDAI.arachne
