@@ -20,6 +20,7 @@ const matchSectionSelection = (sectionLabel) => {
 //gets an array of sections from iDAI.objects data
 //returns an array of datings from dating objects from selected sections
 const extractDatingSections = (arachneSectionsArray, sectionSelectFunc) => {
+    if (!arachneSectionsArray) return [];
     const sections = arachneSectionsArray;
     const sectionSelect = sectionSelectFunc;
     let datingSectionsArray = [];
@@ -42,7 +43,7 @@ const extractDatingSections = (arachneSectionsArray, sectionSelectFunc) => {
 //returns an array of iDAI.chronontology ids (extracted from the links in the strings)
 const extractChronOntologyIds = (datingSections) => {
 
-    if (datingSections.length<1) return;
+    if (!datingSections||datingSections.length<1) return;
 
     const idRegex = /\/period\/(\w+)/g;
 
