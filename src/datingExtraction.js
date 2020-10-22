@@ -117,18 +117,18 @@ const getDatingSpan = (datingNestedArray) => {
 
             //parse detailed dating in parentheses
             if (match.detailDigit) {
+                //assign values depending on if match.detailDigit is one digit or two digits separated by '-'
+                timespan[0] = parseInt(match.detailDigit.split('-')[0]);
+                timespan[1] = match.detailDigit.split("-")[1] ? parseInt(match.detailDigit.split("-")[1]) : parseInt(match.detailDigit);
                 if ((match.detailMod === "um ") || (match.detailMod === "gegen ") || (match.detailMod === "circa ") || (match.detailMod === "ca. ") || (match.detailMod === "ca ") || (match.detailMod === "~")) {
-                    timespan[0] = parseInt(match.detailDigit.split(".")[0]) - 10; //TODO: how big should the fuzzy circa timespan be?
-                    timespan[1] = parseInt(match.detailDigit.split(".")[0]) + 10;
-                } else {
-                    timespan[0] = parseInt(match.detailDigit.split(".")[0]);
-                    timespan[1] = parseInt(match.detailDigit.split(".")[0]);
+                    timespan[0] -= 10; //TODO: how big should the fuzzy circa timespan be?
+                    timespan[1] += 10;
                 }
                 if ((match.bcAd === "v. Chr.") || (match.bcAd === "v. Chr.") || (match.bcAd === "v. Chr.")) {
                     timespan[0] *= -1;
                     timespan[1] *= -1;
                 }
-                // in case there is a match.detailDigit: only match.detailDigit, match.detailMod, and match.bcAd value are evaluated
+                //in case there is a match.detailDigit: only match.detailDigit, match.detailMod, and match.bcAd value are evaluated
                 return timespan;
             } else {
                 switch (match.fraction) {
