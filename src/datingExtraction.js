@@ -1,3 +1,5 @@
+const datingSpanConfig = require('./datingSpanConfig');
+
 /*const dateParserArachne = (datingArray) => {
     const dates = datingArray;
     let datingObj = {
@@ -113,7 +115,7 @@ const getDatingSpan = (datingNestedArray) => {
 
         for (let match of matches) {
             //initialise timespan array
-            let timespan = [0, 99];
+            let timespan = datingSpanConfig.initialize;
 
             //parse detailed dating in parentheses
             if (match.detailDigit) {
@@ -121,8 +123,8 @@ const getDatingSpan = (datingNestedArray) => {
                 timespan[0] = parseInt(match.detailDigit.split('-')[0]);
                 timespan[1] = match.detailDigit.split("-")[1] ? parseInt(match.detailDigit.split("-")[1]) : parseInt(match.detailDigit);
                 if ((match.detailMod === "um ") || (match.detailMod === "gegen ") || (match.detailMod === "circa ") || (match.detailMod === "ca. ") || (match.detailMod === "ca ") || (match.detailMod === "~")) {
-                    timespan[0] -= 10; //TODO: how big should the fuzzy circa timespan be?
-                    timespan[1] += 10;
+                    timespan[0] += datingSpanConfig.fuzzy[0];
+                    timespan[1] += datingSpanConfig.fuzzy[1];
                 }
                 if ((match.bcAd === "v. Chr.") || (match.bcAd === "v. Chr.") || (match.bcAd === "v. Chr.")) {
                     timespan[0] *= -1;
@@ -137,19 +139,19 @@ const getDatingSpan = (datingNestedArray) => {
                     case "Anfang":
                     case "Frühes":
                     case "frühes":
-                        timespan[0] = 0;
-                        timespan[1] = 33; //25?
+                        timespan[0] = datingSpanConfig.early[0];
+                        timespan[1] = datingSpanConfig.early[1];
                         break;
                     case "Mitte":
-                        timespan[0] = 33; //25?
-                        timespan[1] = 66; //75?
+                        timespan[0] = datingSpanConfig.mid[0];
+                        timespan[1] = datingSpanConfig.mid[1];
                         break;
                     case "Ende/spätes":
                     case "Ende":
                     case "Spätes":
                     case "spätes":
-                        timespan[0] = 66; //75?
-                        timespan[1] = 99;
+                        timespan[0] = datingSpanConfig.late[0];
+                        timespan[1] = datingSpanConfig.late[1];
                         break;
                     //parse decade
                     case "Jahrzehnt":
@@ -161,8 +163,8 @@ const getDatingSpan = (datingNestedArray) => {
                             case "erste":
                             case "ersten":
                             case "erstes":
-                                timespan[0] = 0
-                                timespan[1] = 9;
+                                timespan[0] = datingSpanConfig.decade["1"][0];
+                                timespan[1] = datingSpanConfig.decade["1"][1];
                                 break;
                             case "2.":
                             case "3.":
@@ -172,23 +174,17 @@ const getDatingSpan = (datingNestedArray) => {
                             case "7.":
                             case "8.":
                             case "9.":
-                                //in case a decade should span 0-9:
                                 timespan[0] =
-                                    (parseInt(match.fractionCentMilDigit.split(".")[0]) - 1) * 10;
+                                    datingSpanConfig.decade["begin"](match.fractionCentMilDigit);
                                 timespan[1] =
-                                    parseInt(match.fractionCentMilDigit.split(".")[0]) * 10 - 1;
-                                //in case a decade should span 1-10:
-                                /*timespan[0] =
-                                    (parseInt(match.fractionCentMilDigit.split(".")[0])) * 10 -9;
-                                timespan[1] =
-                                    parseInt(match.fractionCentMilDigit.split(".")[0]) * 10;*/
+                                    datingSpanConfig.decade["end"](match.fractionCentMilDigit);
                                 break;
                             case "10.":
                             case "letzte":
                             case "letzten":
                             case "letztes":
-                                timespan[0] = 90
-                                timespan[1] = 99;
+                                timespan[0] = datingSpanConfig.decade["10"][0];
+                                timespan[1] = datingSpanConfig.decade["10"][1];
                                 break;
                             default:
                                 break;
@@ -204,8 +200,8 @@ const getDatingSpan = (datingNestedArray) => {
                             case "ersten":
                             case "erster":
                             case "erstes":
-                                timespan[0] = 0;
-                                timespan[1] = 49;
+                                timespan[0] = datingSpanConfig.half["1"][0];
+                                timespan[1] = datingSpanConfig.half["1"][1];
                                 break;
                             case "2.":
                             //case "2. ":
@@ -217,8 +213,8 @@ const getDatingSpan = (datingNestedArray) => {
                                 //case "zweiten":
                                 //case "zweiter":
                                 //case "zweites":
-                                timespan[0] = 50;
-                                timespan[1] = 99;
+                                timespan[0] = datingSpanConfig.half["2"][0];
+                                timespan[1] = datingSpanConfig.half["2"][1];
                                 break;
                             default:
                                 break;
@@ -234,13 +230,13 @@ const getDatingSpan = (datingNestedArray) => {
                             case "ersten":
                             case "erster":
                             case "erstes":
-                                timespan[0] = 0;
-                                timespan[1] = 33;
+                                timespan[0] = datingSpanConfig.third["1"][0];
+                                timespan[1] = datingSpanConfig.third["1"][1];
                                 break;
                             case "2.":
                                 //case "2. ":
-                                timespan[0] = 33; //?
-                                timespan[1] = 66;
+                                timespan[0] = datingSpanConfig.third["2"][0];
+                                timespan[1] = datingSpanConfig.third["2"][1];
                                 break;
                             case "3.":
                             //case "3. ":
@@ -248,8 +244,8 @@ const getDatingSpan = (datingNestedArray) => {
                             case "letzten":
                             case "letzter":
                             case "letztes":
-                                timespan[0] = 66; //?
-                                timespan[1] = 99;
+                                timespan[0] = datingSpanConfig.third["3"][0];
+                                timespan[1] = datingSpanConfig.third["3"][1];
                                 break;
                             default:
                                 break;
@@ -264,24 +260,24 @@ const getDatingSpan = (datingNestedArray) => {
                             case "erstes":
                             case "erster":
                             case "ersten":
-                                timespan[0] = 0;
-                                timespan[1] = 24;
+                                timespan[0] = datingSpanConfig.quarter["1"][0];
+                                timespan[1] = datingSpanConfig.quarter["1"][1];
                                 break;
                             case "2.":
-                                timespan[0] = 25;
-                                timespan[1] = 49;
+                                timespan[0] = datingSpanConfig.quarter["2"][0];
+                                timespan[1] = datingSpanConfig.quarter["2"][1];
                                 break;
                             case "3.":
-                                timespan[0] = 50;
-                                timespan[1] = 74;
+                                timespan[0] = datingSpanConfig.quarter["3"][0];
+                                timespan[1] = datingSpanConfig.quarter["3"][1];
                                 break;
                             case "4.":
                             case "letzte":
                             case "letztes":
                             case "letzter":
                             case "letzten":
-                                timespan[0] = 75;
-                                timespan[1] = 99;
+                                timespan[0] = datingSpanConfig.quarter["4"][0];
+                                timespan[1] = datingSpanConfig.quarter["4"][1];
                                 break;
                             default:
                                 break;
@@ -297,18 +293,14 @@ const getDatingSpan = (datingNestedArray) => {
                 case "Jh.":
                 case " Jh.":
                 case "Jh":
-                    timespan[0] +=
-                        (parseInt(match.yearCentMilDigit.split(".")[0]) - 1) * 100;
-                    timespan[1] +=
-                        (parseInt(match.yearCentMilDigit.split(".")[0]) - 1) * 100;
+                    timespan[0] += datingSpanConfig.century(match.yearCentMilDigit);
+                    timespan[1] += datingSpanConfig.century(match.yearCentMilDigit);
                     break;
                 case "Jt.":
                 case " Jt.":
                 case "Jt":
-                    timespan[0] +=
-                        (parseInt(match.yearCentMilDigit.split(".")[0]) - 1) * 1000;
-                    timespan[1] +=
-                        (parseInt(match.yearCentMilDigit.split(".")[0]) - 1) * 1000;
+                    timespan[0] += datingSpanConfig.millennium(match.yearCentMilDigit);
+                    timespan[1] += datingSpanConfig.millennium(match.yearCentMilDigit);
                     break;
                 default:
                     if (match.yearCentMilDigit) {
