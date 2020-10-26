@@ -54,7 +54,7 @@ const extractChronOntologyIds = (datingSections) => {
         .map( links => links.map( link => link.slice(8)));
 
     //temporary fix for consuming functions: .flat() until consuming functions are refactored
-    return idsNested.flat();
+    return idsNested;
 }
 
 const getIdsFromDating = (sections) => {

@@ -41,7 +41,18 @@ class PeriodAPI extends RESTDataSource {
     getPeriodsByIds({ periodIds, language, type }) {
         if(!periodIds) return;
         return Promise.all(
-            periodIds.map( periodId => this.getPeriodById({ periodId, language, type }))
+            periodIds.flat().map( periodId => this.getPeriodById({ periodId, language, type }))
+        );
+    }
+
+    getNestedPeriodsByIds({ periodIds, language, type }) {
+        if(!periodIds) return;
+        const promisedPeriods = periodIds.map( ids =>
+            ids.map( periodId =>
+                this.getPeriodById({ periodId, language, type })
+        ) )
+        return Promise.all(
+            promisedPeriods
         );
     }
 
