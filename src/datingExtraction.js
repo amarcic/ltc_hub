@@ -289,25 +289,28 @@ const getDatingSpan = (datingNestedArray) => {
             }
 
             //parse century or millennium
-            switch (match.centuryMillennium) {
-                case "Jh.":
-                case " Jh.":
-                case "Jh":
-                    timespan[0] += datingSpanConfig.century(match.yearCentMilDigit);
-                    timespan[1] += datingSpanConfig.century(match.yearCentMilDigit);
-                    break;
-                case "Jt.":
-                case " Jt.":
-                case "Jt":
-                    timespan[0] += datingSpanConfig.millennium(match.yearCentMilDigit);
-                    timespan[1] += datingSpanConfig.millennium(match.yearCentMilDigit);
-                    break;
-                default:
-                    if (match.yearCentMilDigit) {
-                        timespan[0] = parseInt(match.yearCentMilDigit.split(".")[0]);
-                        timespan[1] = parseInt(match.yearCentMilDigit.split(".")[0]);
-                    }
-                    break;
+            if(match.centuryMillennium) {
+                switch (match.centuryMillennium) {
+                    case "Jh.":
+                    case " Jh.":
+                    case "Jh":
+                        timespan[0] += datingSpanConfig.century(match.yearCentMilDigit);
+                        timespan[1] += datingSpanConfig.century(match.yearCentMilDigit);
+                        break;
+                    case "Jt.":
+                    case " Jt.":
+                    case "Jt":
+                        timespan[0] += datingSpanConfig.millennium(match.yearCentMilDigit);
+                        timespan[1] += datingSpanConfig.millennium(match.yearCentMilDigit);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //parse match.yearCentMilDigit as being a specific year
+            else if (match.yearCentMilDigit) {
+                timespan[0] = parseInt(match.yearCentMilDigit);
+                timespan[1] = parseInt(match.yearCentMilDigit);
             }
 
             //parse BC or AD
