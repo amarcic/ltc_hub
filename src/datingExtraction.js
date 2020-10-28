@@ -290,10 +290,13 @@ const getDatingSpan = (datingNestedArray) => {
 
             //parse century or millennium
             if(match.centuryMillennium) {
-                switch (match.centuryMillennium) {
+                switch (match.centuryMillennium.trim()) {
                     case "Jh.":
-                    case " Jh.":
                     case "Jh":
+                    case "Jhs.":
+                    case "Jhs":
+                    case "Jahrhundert":
+                    case "Jahrhunderts":
                         timespan[0] += datingSpanConfig.century(match.yearCentMilDigit);
                         timespan[1] += datingSpanConfig.century(match.yearCentMilDigit);
                         break;
