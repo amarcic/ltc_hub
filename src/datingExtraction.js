@@ -115,7 +115,7 @@ const getDatingSpan = (datingNestedArray) => {
 
         for (let match of matches) {
             //initialise timespan array
-            let timespan = datingSpanConfig.initialize;
+            let timespan = [...datingSpanConfig.initialize];
 
             //parse detailed dating in parentheses
             if (match.detailDigit) {
@@ -340,7 +340,7 @@ const getDatingSpan = (datingNestedArray) => {
 
             //if there is already something in timespans, i.e. there are two timespans in the string, begin and end each get their own begin and end
             if (timespans.length === 0) {
-                timespans = timespan;
+                timespans = [...timespan];
             } else {
                 let temp = [timespans[0], timespans[1]];
                 if (temp[1] >= timespan[0]) {
