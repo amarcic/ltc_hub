@@ -108,7 +108,7 @@ const typeDefs = gql`
         """
         entitiesByString(searchString: String, filters: [String]): [Entity]
         entitiesMultiFilter( searchString: String, coordinates: [String], projects: [String], period: String, entityTypes: [RelatedType] ): [Entity]
-        locatedEntities(id: ID!): [Entity]!
+        entitiesByLocation(id: ID!): [Entity]!
         entitiesByLocations(ids: [ID]!): [[Entity]]!
         entitiesByPeriod(periodString: String): [Entity]
         entitiesByCoordinates(coordinates: [String]): [Entity]
