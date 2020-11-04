@@ -80,6 +80,14 @@ class EntityAPI extends RESTDataSource {
         }
     }
 
+    async getEntitiesByCatalogId({ catalogId, entryId }) {
+        const catalogPath = catalogId + "/" + (entryId || "");
+        const responseCatalog = await this.get( `catalog/${catalogPath}` );
+        const entryIds = responseCatalog.root.children.map( entry => entry.arachneEntityId );
+        //const responseEntities =
+        return this.getEntitiesById({entityIds: entryIds});
+    }
+
     async getEntitiesByString({ searchString, filters }) {
         const filtersConcat = filters && filters.map( filter => `facet_bestandsname:${filter}` ).join(' OR ');
         const params = filters && filters.length > 0
