@@ -13,11 +13,7 @@ const typeDefs = gql`
         related(types: [RelatedType]): [Entity]
         spatial(relations: [SpatialRelations]): [Place]
         temporal(language: Languages): [[Period]]
-        """
-        retrieve period data for Arachne objects from ChronOntology when no ID is given in the data set
-        """
-        temporalArachne: Period
-        periodName: [String]
+        periodNames: [String]
         type: String
         onDating: [String]
         dating: [[String]]

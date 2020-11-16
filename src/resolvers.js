@@ -40,9 +40,9 @@ module.exports = {
             dataSources.subjectAPI.getSubjectById({ subjectId: "_8bca4bf1"}),
         temporal: ( entity, { meanings, language }, {dataSources}) =>
             dataSources.periodAPI.getNestedPeriodsByIds({ periodIds: entity.periodIds, meanings: meanings || "all", language: language? language : "de" }),
-        temporalArachne: ( entity, _, {dataSources}) =>
+        //temporalArachne: ( entity, _, {dataSources}) =>
             //limiting provenance to "Arachne" in most cases identifies the iDAI.chronontology periods associated with datings in iDAI.arachne
-            dataSources.periodAPI.getPeriodByNameAndProvenance({ periodName: entity.periodName, provenance: "Arachne" }),
+        //    dataSources.periodAPI.getPeriodByNameAndProvenance({ periodName: entity.periodName, provenance: "Arachne" }),
         related: ( entity, { types }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesById({ entityIds: entity.relatedEntities, types: types }),
         dating: ( entity, _) => {

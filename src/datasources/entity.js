@@ -50,7 +50,7 @@ class EntityAPI extends RESTDataSource {
             relatedEntities: entity.connectedEntities || "",
             type: entity.type,
             periodIds: extractChronOntologyIds(datingStringArray),
-            periodName: entity.facet_datierungepoche || [],
+            periodNames: entity.facet_datierungepoche || [],
             onDating: datingStringArray
             //dating: getDatingHumReadable(datingArray),
             //datingSpan: getDatingSpan(datingArray)

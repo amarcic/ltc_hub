@@ -15,7 +15,7 @@ class PlaceAPI extends RESTDataSource {
             ancestorIds: place.ancestors && place.ancestors.map( ancestor => ancestor.slice(35)),
             coordinates: place.prefLocation && place.prefLocation.coordinates
                 ? place.prefLocation.coordinates.join(", ")
-                : "0, 0",
+                : null,
             types: place.types,
             provenance: place.provenance
         }
