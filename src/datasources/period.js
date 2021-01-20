@@ -4,9 +4,9 @@ class PeriodAPI extends RESTDataSource {
     constructor() {
         super();
         //production server
-        this.baseURL = 'http://chronontology.dainst.org/data/';
+        //this.baseURL = 'http://chronontology.dainst.org/data/';
         //dev server for SPP2143 data
-        //this.baseURL = 'https://195.37.232.183/data';
+        this.baseURL = 'https://chronontology-test.dainst.org/data/';
     }
 
     periodReducer( period, { language } ) {
