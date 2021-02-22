@@ -1,4 +1,4 @@
-const { extractDating, getDatingSpan, getDatingHumReadable } = require('./datingExtraction');
+const { extractDating, getDatingSpan, getDatingHumReadable, extractChronOntologyIds } = require('./datingExtraction');
 
 module.exports = {
     Query: {
@@ -52,6 +52,19 @@ module.exports = {
         datingSpan: ( entity, _) => {
             const datingArray = extractDating(entity.onDating);
             return getDatingSpan(datingArray);
+        },
+        datingSets: (entity, _) => {
+            const datingArray = entity.onDating;
+            return datingArray.map( dating => {
+                return {
+                    datingText: dating,
+                    //it's a bit of a hack to first wrap the single dating element in an array
+                    // and than pick the first cell, just to use the same dating extraction methods
+                    datingItems: getDatingHumReadable(extractDating([dating]))[0],
+                    datingSpan: getDatingSpan(extractDating([dating]))[0],
+                    periodIds: extractChronOntologyIds([dating])[0]
+                }
+            })
         }
     },
     Place: {

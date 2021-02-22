@@ -18,10 +18,17 @@ const typeDefs = gql`
         onDating: [String]
         dating: [[String]]
         datingSpan: [[String]]
+        datingSets: [Dating]
     }
     type Subject {
         identifier: ID!
         title: String
+    }
+    type Dating {
+        datingText: String
+        datingItems: [String]
+        datingSpan: [String]
+        periodIds: [String]
     }
     type Place {
         identifier: ID!

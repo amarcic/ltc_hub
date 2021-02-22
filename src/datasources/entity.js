@@ -52,6 +52,7 @@ class EntityAPI extends RESTDataSource {
             periodIds: extractChronOntologyIds(datingStringArray),
             periodNames: entity.facet_datierungepoche || [],
             onDating: datingStringArray
+
             //dating: getDatingHumReadable(datingArray),
             //datingSpan: getDatingSpan(datingArray)
         };
@@ -81,10 +82,17 @@ class EntityAPI extends RESTDataSource {
     }
 
     async getEntitiesByCatalogId({ catalogId, entryId }) {
-        const catalogPath = catalogId + "/" + (entryId || "");
+        const catalogPath = entryId
+                                ? `entry/${entryId}`
+                                : catalogId;
+            //catalogId + "/" + (entryId || "");
         const responseCatalog = await this.get( `catalog/${catalogPath}` );
-        const entryIds = responseCatalog.root.children.map( entry => entry.arachneEntityId );
-        //const responseEntities =
+        const entryIds = entryId
+                            ? responseCatalog.children.map( entry => entry.arachneEntityId )
+                            : responseCatalog.root.children.map( entry => entry.arachneEntityId );
+
+
+
         return this.getEntitiesById({entityIds: entryIds});
     }
 
