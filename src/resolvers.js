@@ -58,8 +58,8 @@ module.exports = {
             return datingArray.map( dating => {
                 return {
                     datingText: dating,
-                    //it's a bit of a hack to first wrap the single dating element in an array
-                    // and than pick the first cell, just to use the same dating extraction methods
+                    //it's a bit hacky to first wrap the single dating element in an array
+                    // and than pick the first cell, to keep using the same dating extraction methods
                     datingItems: getDatingHumReadable(extractDating([dating]))[0],
                     datingSpan: getDatingSpan(extractDating([dating]))[0],
                     periodIds: extractChronOntologyIds([dating])[0]

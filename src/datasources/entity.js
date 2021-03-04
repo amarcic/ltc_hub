@@ -81,19 +81,53 @@ class EntityAPI extends RESTDataSource {
         }
     }
 
+    async getEntityIdsFromNestedCatalogs( catalogEntryId ) {
+        let entityIds = [];
+        const catalogEntry = await this.get(`catalog/entry/${catalogEntryId}`);
+
+        if (catalogEntry.totalChildren>0) {
+            catalogEntry.children.forEach( child => {
+                if (child.totalChildren>0) {
+                    //problems!
+                    //const childEntities =
+                    this.getEntityIdsFromNestedCatalogs( child.id )
+                        .then( ids => entityIds.push(ids) );
+                    //entityIds.push(childEntities);
+                } else {
+                    entityIds.push(child.arachneEntityId);
+                }
+            } );
+            /*entityIds = catalogEntry.children.map( child => {
+                if (child.totalChildren>0) {
+                    return this.getEntityIdsFromNestedCatalogs( child.id );
+                } else {
+                    return child.arachneEntityId;
+                }
+            } );*/
+        } else {
+            entityIds.push(catalogEntry.arachneEntityId);
+        }
+
+        return entityIds.flat();
+    }
     async getEntitiesByCatalogId({ catalogId, entryId }) {
         const catalogPath = entryId
                                 ? `entry/${entryId}`
                                 : catalogId;
             //catalogId + "/" + (entryId || "");
         const responseCatalog = await this.get( `catalog/${catalogPath}` );
-        const entryIds = entryId
-                            ? responseCatalog.children.map( entry => entry.arachneEntityId )
+        const entityIds = await this.getEntityIdsFromNestedCatalogs(entryId);
+        /*entryId
+                            ? children.map( entry => entry.arachneEntityId )
                             : responseCatalog.root.children.map( entry => entry.arachneEntityId );
-
-
-
-        return this.getEntitiesById({entityIds: entryIds});
+*/
+/*
+        if (responseCatalog.totalChildren>0) {
+            responseCatalog.children.forEach( childId =>
+                this.getEntitiesByCatalogId({entryId: childId}));
+        }*/
+        if (entityIds.length>0)
+            return this.getEntitiesById({entityIds: entityIds});
     }
 
     async getEntitiesByString({ searchString, filters }) {
