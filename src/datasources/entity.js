@@ -83,49 +83,32 @@ class EntityAPI extends RESTDataSource {
 
     async getEntityIdsFromNestedCatalogs( catalogEntryId ) {
         let entityIds = [];
+        let childrenIds = [];
         const catalogEntry = await this.get(`catalog/entry/${catalogEntryId}`);
+
+        catalogEntry.arachneEntityId
+            && entityIds.push(catalogEntry.arachneEntityId);
 
         if (catalogEntry.totalChildren>0) {
             catalogEntry.children.forEach( child => {
-                if (child.totalChildren>0) {
-                    //problems!
-                    //const childEntities =
-                    this.getEntityIdsFromNestedCatalogs( child.id )
-                        .then( ids => entityIds.push(ids) );
-                    //entityIds.push(childEntities);
-                } else {
-                    entityIds.push(child.arachneEntityId);
-                }
+                child.arachneEntityId && child.totalChildren===0
+                    && entityIds.push(child.arachneEntityId);
+                child.totalChildren>0
+                    && childrenIds.push(child.id)
             } );
-            /*entityIds = catalogEntry.children.map( child => {
-                if (child.totalChildren>0) {
-                    return this.getEntityIdsFromNestedCatalogs( child.id );
-                } else {
-                    return child.arachneEntityId;
-                }
-            } );*/
-        } else {
-            entityIds.push(catalogEntry.arachneEntityId);
-        }
 
-        return entityIds.flat();
+        }
+        const nestedEntities = await Promise.all( childrenIds.map( childId => this.getEntityIdsFromNestedCatalogs(childId) ) );
+        return [...entityIds, ...nestedEntities].flat();
     }
+
     async getEntitiesByCatalogId({ catalogId, entryId }) {
         const catalogPath = entryId
                                 ? `entry/${entryId}`
                                 : catalogId;
-            //catalogId + "/" + (entryId || "");
-        const responseCatalog = await this.get( `catalog/${catalogPath}` );
+        
         const entityIds = await this.getEntityIdsFromNestedCatalogs(entryId);
-        /*entryId
-                            ? children.map( entry => entry.arachneEntityId )
-                            : responseCatalog.root.children.map( entry => entry.arachneEntityId );
-*/
-/*
-        if (responseCatalog.totalChildren>0) {
-            responseCatalog.children.forEach( childId =>
-                this.getEntitiesByCatalogId({entryId: childId}));
-        }*/
+
         if (entityIds.length>0)
             return this.getEntitiesById({entityIds: entityIds});
     }
