@@ -31,7 +31,9 @@ module.exports = {
         entitiesByCatalogEntryId: (_, {catalogId, entryId}, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByCatalogEntryId({catalogId, entryId}),
         entitiesByCatalogId: (_, {catalogId}, {dataSources}) =>
-            dataSources.entityAPI.getEntitiesByCatalogId({catalogId})
+            dataSources.entityAPI.getEntitiesByCatalogId({catalogId}),
+        entitiesFromCatalog: (_, {catalogOrEntryId}, {dataSources}) =>
+            dataSources.entityAPI.getEntitiesFromCatalog({catalogOrEntryId: catalogOrEntryId})
     },
     Entity: {
         spatial: ( entity, { relations }, {dataSources}) =>

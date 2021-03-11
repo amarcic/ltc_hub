@@ -19,6 +19,7 @@ const typeDefs = gql`
         dating: [[String]]
         datingSpan: [[String]]
         datingSets: [Dating]
+        catalogPaths: [String]
     }
     type Subject {
         identifier: ID!
@@ -117,6 +118,7 @@ const typeDefs = gql`
         entitiesByCoordinates(coordinates: [String]): [Entity]
         entitiesByCatalogEntryId(catalogId: Int, entryId: Int): [Entity]
         entitiesByCatalogId(catalogId: Int): [Entity]
+        entitiesFromCatalog(catalogOrEntryId: Int): [Entity]
         place(id: ID!): Place
         places(ids: [ID]!): [Place]!
         archaeologicalSites(searchString: String, coordinates: [String]): [Place]!
