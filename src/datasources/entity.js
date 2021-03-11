@@ -102,15 +102,23 @@ class EntityAPI extends RESTDataSource {
         return [...entityIds, ...nestedEntities].flat();
     }
 
-    async getEntitiesByCatalogId({ catalogId, entryId }) {
+    async getEntitiesByCatalogEntryId({ catalogId, entryId }) {
         const catalogPath = entryId
                                 ? `entry/${entryId}`
                                 : catalogId;
-        
+
         const entityIds = await this.getEntityIdsFromNestedCatalogs(entryId);
 
         if (entityIds.length>0)
             return this.getEntitiesById({entityIds: entityIds});
+    }
+
+    async getEntitiesByCatalogId({ catalogId }) {
+        const response = await this.get('search', {q: 'catalogIds:' + catalogId});
+        const entityIds = response.size > 0
+                            ? response.entities.map( entity => entity.entityId)
+                            : [];
+        return this.getEntitiesById( {entityIds} );
     }
 
     async getEntitiesByString({ searchString, filters }) {
