@@ -114,16 +114,21 @@ class EntityAPI extends RESTDataSource {
             return this.getEntitiesById({entityIds: entityIds});
     }
 
+    /* now included in getEntitiesFromCatalog
     async getEntitiesByCatalogId({ catalogId }) {
         const response = await this.get('search', {q: 'catalogIds:' + catalogId});
         const entityIds = response.size > 0
                             ? response.entities.map( entity => entity.entityId)
                             : [];
         return this.getEntitiesById( {entityIds} );
-    }
+    }*/
 
-    async getEntitiesFromCatalog({ catalogOrEntryId }) {
-        const response = await this.get('search', {q: 'catalogPaths:' + catalogOrEntryId });
+    async getEntitiesFromCatalog({ catalogId, entryId }) {
+        const queryParameter = catalogId&&entryId
+                                ? {q: `catalogPaths:${catalogId} AND ${entryId}` }
+                                : {q: `catalogIds:${catalogId}`}
+        const response = await this.get('search', queryParameter);
+
         const entityIds = response.size > 0
             ? response.entities.map( entity => entity.entityId)
             : [];

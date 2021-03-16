@@ -117,8 +117,7 @@ const typeDefs = gql`
         entitiesByPeriod(periodString: String): [Entity]
         entitiesByCoordinates(coordinates: [String]): [Entity]
         entitiesByCatalogEntryId(catalogId: Int, entryId: Int): [Entity]
-        entitiesByCatalogId(catalogId: Int): [Entity]
-        entitiesFromCatalog(catalogOrEntryId: Int): [Entity]
+        entitiesFromCatalog(catalogId: Int!, entryId: Int): [Entity]
         place(id: ID!): Place
         places(ids: [ID]!): [Place]!
         archaeologicalSites(searchString: String, coordinates: [String]): [Place]!
