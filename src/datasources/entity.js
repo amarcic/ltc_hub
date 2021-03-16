@@ -82,7 +82,7 @@ class EntityAPI extends RESTDataSource {
         }
     }
 
-    async getEntityIdsFromNestedCatalogs( catalogEntryId ) {
+    async getEntitiesFromCatalogRecursively({catalogEntryId}) {
         let entityIds = [];
         let childrenIds = [];
         const catalogEntry = await this.get(`catalog/entry/${catalogEntryId}`);
@@ -99,21 +99,21 @@ class EntityAPI extends RESTDataSource {
             } );
 
         }
-        const nestedEntities = await Promise.all( childrenIds.map( childId => this.getEntityIdsFromNestedCatalogs(childId) ) );
+        const nestedEntities = await Promise.all( childrenIds.map( childId => this.getEntitiesFromCatalogRecursively({catalogEntryId: childId}) ) );
         return [...entityIds, ...nestedEntities].flat();
     }
 
-    /* redundant
-    async getEntitiesByCatalogEntryId({ catalogId, entryId }) {
-        const catalogPath = entryId
-                                ? `entry/${entryId}`
+
+    async getEntitiesByCatalogEntryId({ catalogId, catalogEntryId }) {
+        const catalogPath = catalogEntryId
+                                ? `entry/${catalogEntryId}`
                                 : catalogId;
 
-        const entityIds = await this.getEntityIdsFromNestedCatalogs(entryId);
+        const entityIds = await this.getEntitiesFromCatalogRecursively({catalogEntryId: catalogEntryId});
 
         if (entityIds.length>0)
             return this.getEntitiesById({entityIds: entityIds});
-    }*/
+    }
 
     /* now included in getEntitiesFromCatalog
     async getEntitiesByCatalogId({ catalogId }) {
