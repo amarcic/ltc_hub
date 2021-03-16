@@ -28,8 +28,6 @@ module.exports = {
             dataSources.placeAPI.getArchaeologicalSitesByRegion({ searchString: searchString, regionId: id }),
         periodById: (_, {id}, {dataSources}) =>
             dataSources.periodAPI.getPeriodById({periodId: id, language: "de"}),
-        entitiesByCatalogEntryId: (_, {catalogId, entryId}, {dataSources}) =>
-            dataSources.entityAPI.getEntitiesByCatalogEntryId({catalogId, entryId}),
         entitiesFromCatalog: (_, {catalogId, entryId}, {dataSources}) =>
             dataSources.entityAPI.getEntitiesFromCatalog({catalogId: catalogId, entryId: entryId})
     },

@@ -103,6 +103,7 @@ class EntityAPI extends RESTDataSource {
         return [...entityIds, ...nestedEntities].flat();
     }
 
+    /* redundant
     async getEntitiesByCatalogEntryId({ catalogId, entryId }) {
         const catalogPath = entryId
                                 ? `entry/${entryId}`
@@ -112,7 +113,7 @@ class EntityAPI extends RESTDataSource {
 
         if (entityIds.length>0)
             return this.getEntitiesById({entityIds: entityIds});
-    }
+    }*/
 
     /* now included in getEntitiesFromCatalog
     async getEntitiesByCatalogId({ catalogId }) {
