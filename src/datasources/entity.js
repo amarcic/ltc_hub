@@ -33,7 +33,6 @@ class EntityAPI extends RESTDataSource {
     entityReducer(entity) {
         if(!entity) return;
         const datingStringArray = extractDatingSections(entity.sections, matchSectionSelection);
-        //const datingArray = extractDating(datingStringArray);
 
         //actual reducer
         return{
@@ -82,10 +81,22 @@ class EntityAPI extends RESTDataSource {
         }
     }
 
-    async getEntitiesFromCatalogRecursively({catalogEntryId}) {
+    //this getter uses the iDAI.objects catalog API
+    //catalog entries are fetched recursively and ids for Arachne entities collected
+    //data is available as soon as a catalog is created in Arachne
+    async getEntitiesFromCatalogRecursively({catalogId, catalogEntryId}) {
+
+        const catalogPath = catalogEntryId
+            ? `entry/${catalogEntryId}`
+            : catalogId;
+
         let entityIds = [];
         let childrenIds = [];
-        const catalogEntry = await this.get(`catalog/entry/${catalogEntryId}`);
+
+        const catalogEntry = await this.get(`catalog/${catalogPath}`);
+        //const catalogEntry = await this.get(`catalog/entry/${catalogEntryId}`);
+
+        if(!catalogEntry) return;
 
         catalogEntry.arachneEntityId
             && entityIds.push(catalogEntry.arachneEntityId);
@@ -97,19 +108,24 @@ class EntityAPI extends RESTDataSource {
                 child.totalChildren>0
                     && childrenIds.push(child.id)
             } );
-
+        }
+        if(catalogId
+            &&!catalogEntryId
+            &&catalogEntry.root?.totalChildren>0) {
+                catalogEntry.root.children.forEach( child => {
+                    child.arachneEntityId && child.totalChildren===0
+                    && entityIds.push(child.arachneEntityId);
+                    child.totalChildren>0
+                    && childrenIds.push(child.id)
+                } );
         }
         const nestedEntities = await Promise.all( childrenIds.map( childId => this.getEntitiesFromCatalogRecursively({catalogEntryId: childId}) ) );
         return [...entityIds, ...nestedEntities].flat();
     }
 
-
     async getEntitiesByCatalogEntryId({ catalogId, catalogEntryId }) {
-        const catalogPath = catalogEntryId
-                                ? `entry/${catalogEntryId}`
-                                : catalogId;
 
-        const entityIds = await this.getEntitiesFromCatalogRecursively({catalogEntryId: catalogEntryId});
+        const entityIds = await this.getEntitiesFromCatalogRecursively({catalogId: catalogId, catalogEntryId: catalogEntryId});
 
         if (entityIds.length>0)
             return this.getEntitiesById({entityIds: entityIds});
@@ -157,7 +173,7 @@ class EntityAPI extends RESTDataSource {
                                 ? ` AND ` + projects.map( project => `facet_bestandsname:${project}` ).join(' OR ')
                                 : "";
         const catalog = catalogIds ? ` AND ${catalogIds.map( catalogId => 'catalogIds:'+catalogId).join(' OR ')}` : [];
-        //problem with ambiguous ids:
+        //problem with ambiguous ids when using "catalogPaths":
         //const catalog = catalogId ? ` AND catalogPaths:${catalogId}` : "";
         //const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
         let params = {

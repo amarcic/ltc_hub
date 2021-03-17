@@ -30,8 +30,8 @@ module.exports = {
             dataSources.periodAPI.getPeriodById({periodId: id, language: "de"}),
         entitiesFromCatalog: (_, {catalogId, entryId}, {dataSources}) =>
             dataSources.entityAPI.getEntitiesFromCatalog({catalogId: catalogId, entryId: entryId}),
-        entitiesFromCatalogRecursive: (_, {catalogEntryId}, {dataSources}) =>
-            dataSources.entityAPI.getEntitiesByCatalogEntryId({catalogEntryId: catalogEntryId})
+        entitiesFromCatalogRecursive: (_, {catalogId, catalogEntryId}, {dataSources}) =>
+            dataSources.entityAPI.getEntitiesByCatalogEntryId({catalogId: catalogId, catalogEntryId: catalogEntryId})
     },
     Entity: {
         spatial: ( entity, { relations }, {dataSources}) =>
