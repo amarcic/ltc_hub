@@ -7,6 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/index.js"
   },
+  "babel": {
+    "plugins":[
+      "@babel/plugin-proposal-optional-chaining"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "https://gitlab.cceh.uni-koeln.de/spp-2143-learning-through-connecting/ltc_hub.git"
