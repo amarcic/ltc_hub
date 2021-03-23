@@ -86,6 +86,7 @@ class EntityAPI extends RESTDataSource {
     //data is available as soon as a catalog is created in Arachne
     async getEntitiesFromCatalogRecursively({catalogId, catalogEntryId}) {
 
+        //catalog Id is only considered when no entry Id is given, since entry Id is more specific
         const catalogPath = catalogEntryId
             ? `entry/${catalogEntryId}`
             : catalogId;
@@ -109,6 +110,8 @@ class EntityAPI extends RESTDataSource {
                     && childrenIds.push(child.id)
             } );
         }
+
+        //catalog Id is only considered when no entry Id is given, since entry Id is more specific
         if(catalogId
             &&!catalogEntryId
             &&catalogEntry.root?.totalChildren>0) {
