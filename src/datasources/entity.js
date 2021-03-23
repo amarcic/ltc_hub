@@ -114,7 +114,8 @@ class EntityAPI extends RESTDataSource {
         //catalog Id is only considered when no entry Id is given, since entry Id is more specific
         if(catalogId
             &&!catalogEntryId
-            &&catalogEntry.root?.totalChildren>0) {
+            &&catalogEntry.root
+            &&catalogEntry.root.totalChildren>0) {
                 catalogEntry.root.children.forEach( child => {
                     child.arachneEntityId && child.totalChildren===0
                     && entityIds.push(child.arachneEntityId);
