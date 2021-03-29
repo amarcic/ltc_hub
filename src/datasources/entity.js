@@ -177,7 +177,8 @@ class EntityAPI extends RESTDataSource {
                                 ? ` AND ` + projects.map( project => `facet_bestandsname:${project}` ).join(' OR ')
                                 : "";
         const catalog = catalogIds && catalogIds.length>0
-                        ? ` AND ${catalogIds.map( catalogId => 'catalogIds:'+catalogId).join(' OR ')}`
+            
+                        ? ` AND ${catalogIds.map( catalogId => catalogId!==null && 'catalogIds:'+catalogId).join(' OR ')}`
                         : "";
         //problem with ambiguous ids when using "catalogPaths":
         //const catalog = catalogId ? ` AND catalogPaths:${catalogId}` : "";
