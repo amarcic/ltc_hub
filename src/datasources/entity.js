@@ -171,12 +171,14 @@ class EntityAPI extends RESTDataSource {
     async getFilteredEntities({ searchString, coordinates, period, projects, catalogIds, entityTypes }) {
         const searchStr = searchString&&searchString!=="" ? searchString : '*';
         const typesFilter = entityTypes && entityTypes.length>0
-            ? " AND facet_kategorie:(" + entityTypes.map( type => `"${type}"`).join(" OR ") + ")"
-            : "";
+                            ? " AND facet_kategorie:(" + entityTypes.map( type => `"${type}"`).join(" OR ") + ")"
+                            : "";
         const projectsConcat = projects && projects.length>0
                                 ? ` AND ` + projects.map( project => `facet_bestandsname:${project}` ).join(' OR ')
                                 : "";
-        const catalog = catalogIds ? ` AND ${catalogIds.map( catalogId => 'catalogIds:'+catalogId).join(' OR ')}` : [];
+        const catalog = catalogIds && catalogIds.length>0
+                        ? ` AND ${catalogIds.map( catalogId => 'catalogIds:'+catalogId).join(' OR ')}`
+                        : "";
         //problem with ambiguous ids when using "catalogPaths":
         //const catalog = catalogId ? ` AND catalogPaths:${catalogId}` : "";
         //const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
