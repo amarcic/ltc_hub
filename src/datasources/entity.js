@@ -156,11 +156,11 @@ class EntityAPI extends RESTDataSource {
         return this.getEntitiesById( {entityIds} );
     }
 
-    async getEntitiesByString({ searchString, filters }) {
-        const filtersConcat = filters && filters.map( filter => `facet_bestandsname:${filter}` ).join(' OR ');
-        const params = filters && filters.length > 0
-                        ? {q: `${searchString} AND (${filtersConcat})`, limit: 200/*, fq: "facet_ortsangabe:Fundort"*/ }
-                        : {q: searchString, limit: 200/*, fq: "facet_ortsangabe:Fundort"*/};
+    async getEntitiesByString({ searchString, catalogIds }) {
+        const filtersConcat = catalogIds && catalogIds.map( catalogId => catalogId!==null && `catalogIds:${catalogId}` ).join(' OR ');
+        const params = catalogIds && catalogIds.length > 0
+                        ? {q: `${searchString} AND (${filtersConcat})`, limit: 200 }
+                        : {q: searchString, limit: 200};
         const response = await this.get( 'search', params );
         const entityIds = response.size > 0
                             ? response.entities.map( entity => entity.entityId)
@@ -175,7 +175,7 @@ class EntityAPI extends RESTDataSource {
                             : "";
 
         const catalog = catalogIds && catalogIds.length>0
-                        ? ` AND ${catalogIds.map( catalogId => catalogId!==null && 'catalogIds:'+catalogId).join(' OR ')}`
+                        ? ` AND ${catalogIds.map( catalogId => catalogId!==null && `catalogIds:${catalogId}`).join(' OR ')}`
                         : "";
         //problem with ambiguous ids when using "catalogPaths":
         //const catalog = catalogId ? ` AND catalogPaths:${catalogId}` : "";

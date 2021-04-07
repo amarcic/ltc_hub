@@ -107,10 +107,7 @@ const typeDefs = gql`
     type Query {
         entity(id: ID!): Entity 
         entities(ids: [ID]!): [Entity]!
-        """
-        filter needs exact facet_bestandsname value from Arachne; might be replaced by enum
-        """
-        entitiesByString(searchString: String, filters: [String]): [Entity]
+        entitiesByString(searchString: String, catalogIds: [Int]): [Entity]
         entitiesMultiFilter( searchString: String, coordinates: [String], period: String, catalogIds: [Int], entityTypes: [RelatedType] ): [Entity]
         entitiesByLocation(id: ID!): [Entity]!
         entitiesByLocations(ids: [ID]!): [[Entity]]!
