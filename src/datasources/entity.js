@@ -168,23 +168,20 @@ class EntityAPI extends RESTDataSource {
         return this.getEntitiesById( {entityIds} );
     }
 
-    async getFilteredEntities({ searchString, coordinates, period, projects, catalogIds, entityTypes }) {
+    async getFilteredEntities({ searchString, coordinates, period, catalogIds, entityTypes }) {
         const searchStr = searchString&&searchString!=="" ? searchString : '*';
         const typesFilter = entityTypes && entityTypes.length>0
                             ? " AND facet_kategorie:(" + entityTypes.map( type => `"${type}"`).join(" OR ") + ")"
                             : "";
-        const projectsConcat = projects && projects.length>0
-                                ? ` AND ` + projects.map( project => `facet_bestandsname:${project}` ).join(' OR ')
-                                : "";
+
         const catalog = catalogIds && catalogIds.length>0
-            
                         ? ` AND ${catalogIds.map( catalogId => catalogId!==null && 'catalogIds:'+catalogId).join(' OR ')}`
                         : "";
         //problem with ambiguous ids when using "catalogPaths":
         //const catalog = catalogId ? ` AND catalogPaths:${catalogId}` : "";
         //const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
         let params = {
-            q: `${searchStr} ${catalog} ${projectsConcat} ${typesFilter}`
+            q: `${searchStr} ${catalog} ${typesFilter}`
         }
         if(coordinates&&coordinates.length===4) params['bbox']= coordinates;
         if(period&&period!=="") params['fq']= `facet_datierungepoche:${period}`;
