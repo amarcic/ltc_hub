@@ -20,6 +20,8 @@ const typeDefs = gql`
         datingSpan: [[String]]
         datingSets: [Dating]
         catalogPaths: [String]
+        categoryOfDepicted: [String]
+        materialOfDepicted: [String]
     }
     type Subject {
         identifier: ID!
