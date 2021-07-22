@@ -16,6 +16,7 @@ class PlaceAPI extends RESTDataSource {
             coordinates: place.prefLocation && place.prefLocation.coordinates
                 ? place.prefLocation.coordinates.join(", ")
                 : null,
+            polygon: place.prefLocation && place.prefLocation.shape&& place.prefLocation.shape,
             types: place.types,
             provenance: place.provenance
         }
