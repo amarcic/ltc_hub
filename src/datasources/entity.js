@@ -178,7 +178,7 @@ class EntityAPI extends RESTDataSource {
     async getFilteredEntities({ searchString, coordinates, period, catalogIds, entityTypes }) {
         const searchStr = searchString&&searchString!=="" ? searchString : '*';
         const typesFilter = entityTypes && entityTypes.length>0
-                            ? " AND facet_kategorie:(" + entityTypes.map( type => `"${type}"`).join(" OR ") + ")"
+                            ? " AND facet_kategorie:(" + entityTypes.map( type => `"${valueMapRelatedObjects[type]}"`).join(" OR ") + ")"
                             : "";
 
         const catalog = catalogIds && catalogIds.length>0
