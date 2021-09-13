@@ -36,6 +36,7 @@ const typeDefs = gql`
     type Place {
         identifier: ID!
         name: String
+        names: [String]
         coordinates: String
         polygon: [[[[String]]]]
         temporal: [Period]

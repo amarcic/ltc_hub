@@ -11,6 +11,7 @@ class PlaceAPI extends RESTDataSource {
         return {
             identifier: place.gazId,
             name: place.prefName&&place.prefName.title ? place.prefName.title : "no name found",
+            names: place.names && place.names.map( name => `@${name.language}: ${name.title}`),
             parentId: place.parent && place.parent.slice(35),
             ancestorIds: place.ancestors && place.ancestors.map( ancestor => ancestor.slice(35)),
             coordinates: place.prefLocation && place.prefLocation.coordinates
