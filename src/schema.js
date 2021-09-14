@@ -36,7 +36,7 @@ const typeDefs = gql`
     type Place {
         identifier: ID!
         name: String
-        names: [String]
+        titles: Titles
         coordinates: String
         polygon: [[[[String]]]]
         temporal: [Period]
@@ -48,9 +48,15 @@ const typeDefs = gql`
         discoveryContext: [Place]
         linkedObjects(types: [RelatedType]): [Entity]
     }
-    type Title{
+    type TitleOld {
         language: Languages
         label: String 
+    }
+    type Titles {
+        preferred: String
+        arabic: String
+        french: String
+        german: String
     }
     type Period {
         identifier: ID!
