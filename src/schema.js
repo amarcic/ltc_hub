@@ -71,6 +71,7 @@ const typeDefs = gql`
         partOf: [Period]
         parts: [Period]
         periodContext: [Period]
+        isPartOfIds: [String]
     }
     enum SpatialRelations {
         Fundort
