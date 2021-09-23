@@ -16,6 +16,7 @@ const extractMetadataSections = (arachneSections, metadataType) => {
 }
 
 const depictedMetaExtraction = (sectionMetadataOther, regexPattern) => {
+    if(!sectionMetadataOther) return;
 
     const depictedMeta = sectionMetadataOther.map( section => section.match(regexPattern))
                                 .flat()
