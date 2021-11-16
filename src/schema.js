@@ -3,6 +3,7 @@ const { gql } = require('apollo-server');
 const typeDefs = gql`
     type Entity {
         identifier: ID!
+        internalId: ID
         name: String
         description: String
         """

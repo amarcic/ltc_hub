@@ -42,6 +42,7 @@ class EntityAPI extends RESTDataSource {
         //actual reducer
         return{
             identifier: entity.entityId,
+            internalId: entity.internalId,
             name: entity.title,
             places: entity.places
                 ? entity.places.map( place => {

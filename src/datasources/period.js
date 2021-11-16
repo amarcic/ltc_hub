@@ -14,7 +14,7 @@ class PeriodAPI extends RESTDataSource {
         return {
             identifier: period.resource.id,
             //later map the whole array not just the first element
-            title: period.resource.names[language] ? period.resource.names[language][0] : "no name in this language found",
+            title: period.resource.names[language] ? period.resource.names[language][0] : Object.values(period.resource.names)[0][0],
             begin: period.resource.hasTimespan
                     && period.resource.hasTimespan[0].begin
                 ? period.resource.hasTimespan[0].begin.at
