@@ -1,6 +1,7 @@
 const { RESTDataSource } = require('apollo-datasource-rest');
 const { extractDatingSections, extractChronOntologyIds, matchSectionSelection } = require('../datingExtraction');
 const { extractMetadataSections, depictedMetaExtraction, regexCategory, regexMaterial } = require('../utils');
+const { arachneAfricanCountries } = require('../config');
 
 const valueMapRelatedObjects = {
     Einzelobjekte: 'Einzelobjekte',
@@ -190,11 +191,14 @@ class EntityAPI extends RESTDataSource {
         //problem with ambiguous ids when using "catalogPaths":
         //const catalog = catalogId ? ` AND catalogPaths:${catalogId}` : "";
         //const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
+
+        const focusAfrica = `AND facet_land:("${arachneAfricanCountries.join('" OR "')}")`;
+
         let params = {
-            q: `${searchStr} ${catalog} ${typesFilter}`
+            q: `${searchStr} ${catalog} ${typesFilter} ${focusAfrica}`
         }
         if(coordinates&&coordinates.length===4) params['bbox']= coordinates;
-        if(period&&period!=="") params['fq']= `facet_datierungepoche:${period}`;
+        if(period&&period!=="") params['fq']= `facet_datierungepoche:${period}`; //"facet_datierungepoche:antoninisch"
         const response = await this.get( 'search', params);
         const entityIds = response.size > 0
             ? response.entities.map( entity => entity.entityId)
