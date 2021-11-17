@@ -177,7 +177,7 @@ class EntityAPI extends RESTDataSource {
         return this.getEntitiesById( {entityIds} );
     }
 
-    async getFilteredEntities({ searchString, coordinates, period, catalogIds, entityTypes }) {
+    async getFilteredEntities({ searchString, coordinates, period, catalogIds, entityTypes, focusAfrica }) {
         //check if there is a search string, if not replace with "*"; if there is one, escape slash and maybe swing dash
         let searchStr = searchString&&searchString!=="" ? searchString.replace(/\//g,"\\/")/*.replace(/\~/g,"\\~")*/ : '*';
 
@@ -192,10 +192,12 @@ class EntityAPI extends RESTDataSource {
         //const catalog = catalogId ? ` AND catalogPaths:${catalogId}` : "";
         //const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
 
-        const focusAfrica = `AND facet_land:("${arachneAfricanCountries.join('" OR "')}")`;
+        const focusOnAfrica = focusAfrica
+                            ? `AND facet_land:("${arachneAfricanCountries.join('" OR "')}")`
+                            : "";
 
         let params = {
-            q: `${searchStr} ${catalog} ${typesFilter} ${focusAfrica}`
+            q: `${searchStr} ${catalog} ${typesFilter} ${focusOnAfrica}`
         }
         if(coordinates&&coordinates.length===4) params['bbox']= coordinates;
         if(period&&period!=="") params['fq']= `facet_datierungepoche:${period}`; //"facet_datierungepoche:antoninisch"
