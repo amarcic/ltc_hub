@@ -64,6 +64,7 @@ const typeDefs = gql`
         title: String
         begin: String
         end: String
+        datingText: String
         types: [String]
         senses(typeOfSense: TypeSense): [Period]
         coreArea: [Place]

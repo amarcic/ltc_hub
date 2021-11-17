@@ -24,6 +24,10 @@ class PeriodAPI extends RESTDataSource {
                     //&& period.resource.hasTimespan[0].end.at
                 ? period.resource.hasTimespan[0].end.at || period.resource.hasTimespan[0].end.notAfter
                 : "",
+            datingText: period.resource.hasTimespan
+                            && period.resource.hasTimespan[0]
+                ? period.resource.hasTimespan[0].timeOriginal
+                : "",
             coreAreaIds: period.resource.hasCoreArea && period.resource.hasCoreArea.map( gazetteerURI => gazetteerURI.substr(-7) ),
             types: period.resource.types && period.resource.types,
             hasMeanings: period.resource.relations && period.resource.relations.hasSense,
