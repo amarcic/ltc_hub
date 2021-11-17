@@ -177,7 +177,7 @@ class EntityAPI extends RESTDataSource {
         return this.getEntitiesById( {entityIds} );
     }
 
-    async getFilteredEntities({ searchString, coordinates, period, catalogIds, entityTypes, focusAfrica }) {
+    async getFilteredEntities({ searchString, coordinates, periods, catalogIds, entityTypes, focusAfrica }) {
         //check if there is a search string, if not replace with "*"; if there is one, escape slash and maybe swing dash
         let searchStr = searchString&&searchString!=="" ? searchString.replace(/\//g,"\\/")/*.replace(/\~/g,"\\~")*/ : '*';
 
@@ -192,15 +192,21 @@ class EntityAPI extends RESTDataSource {
         //const catalog = catalogId ? ` AND catalogPaths:${catalogId}` : "";
         //const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
 
+        //use facet land from Arachne facetted search to filter data by African countries
         const focusOnAfrica = focusAfrica
                             ? `AND facet_land:("${arachneAfricanCountries.join('" OR "')}")`
                             : "";
 
+        //const testPeriods = [period,"antonionisch"]
+        const periodSelection = periods && periods.length>0
+                                ? `AND facet_datierungepoche:("${periods.join('" OR "')}")`
+                                : "";
+
         let params = {
-            q: `${searchStr} ${catalog} ${typesFilter} ${focusOnAfrica}`
+            q: `${searchStr} ${catalog} ${typesFilter} ${focusOnAfrica} ${periodSelection}`
         }
         if(coordinates&&coordinates.length===4) params['bbox']= coordinates;
-        if(period&&period!=="") params['fq']= `facet_datierungepoche:${period}`; //"facet_datierungepoche:antoninisch"
+        //if(period&&period!=="") params['fq']= `facet_datierungepoche:${period}`; //"facet_datierungepoche:antoninisch"
         const response = await this.get( 'search', params);
         const entityIds = response.size > 0
             ? response.entities.map( entity => entity.entityId)

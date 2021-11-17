@@ -120,7 +120,7 @@ const typeDefs = gql`
         entity(id: ID!): Entity 
         entities(ids: [ID]!): [Entity]!
         entitiesByString(searchString: String, catalogIds: [Int]): [Entity]
-        entitiesMultiFilter( searchString: String, coordinates: [String], period: String, catalogIds: [Int], entityTypes: [RelatedType], focusAfrica: Boolean ): [Entity]
+        entitiesMultiFilter( searchString: String, coordinates: [String], periods: [String], catalogIds: [Int], entityTypes: [RelatedType], focusAfrica: Boolean ): [Entity]
         entitiesByLocation(id: ID!): [Entity]!
         entitiesByLocations(ids: [ID]!): [[Entity]]!
         entitiesByPeriod(periodString: String): [Entity]

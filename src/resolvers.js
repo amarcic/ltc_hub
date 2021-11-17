@@ -8,8 +8,8 @@ module.exports = {
             dataSources.entityAPI.getEntitiesById({ entityIds: ids }),
         entitiesByString: (_, { searchString, catalogIds }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByString({ searchString: searchString, catalogIds: catalogIds}),
-        entitiesMultiFilter: (_, { searchString, period, coordinates, catalogIds, entityTypes, focusAfrica }, {dataSources}) =>
-            dataSources.entityAPI.getFilteredEntities({ searchString: searchString, period: period, coordinates: coordinates, catalogIds: catalogIds, entityTypes: entityTypes, focusAfrica: focusAfrica }),
+        entitiesMultiFilter: (_, { searchString, periods, coordinates, catalogIds, entityTypes, focusAfrica }, {dataSources}) =>
+            dataSources.entityAPI.getFilteredEntities({ searchString: searchString, periods: periods, coordinates: coordinates, catalogIds: catalogIds, entityTypes: entityTypes, focusAfrica: focusAfrica }),
         entitiesByLocation: (_, { id }, {dataSources}) =>
             dataSources.entityAPI.getEntitiesByLocationId({ locationId: id }),
         entitiesByLocations: (_, { ids }, {dataSources}) =>
