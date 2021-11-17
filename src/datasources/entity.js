@@ -188,16 +188,12 @@ class EntityAPI extends RESTDataSource {
         const catalog = catalogIds && catalogIds.length>0
                         ? ` AND ${catalogIds.map( catalogId => catalogId!==null && `catalogIds:${catalogId}`).join(' OR ')}`
                         : "";
-        //problem with ambiguous ids when using "catalogPaths":
-        //const catalog = catalogId ? ` AND catalogPaths:${catalogId}` : "";
-        //const coordniatesConcat = coordinates && `bbox:${coordinates.join(',')}`;
 
         //use facet land from Arachne facetted search to filter data by African countries
         const focusOnAfrica = focusAfrica
                             ? `AND facet_land:("${arachneAfricanCountries.join('" OR "')}")`
                             : "";
 
-        //const testPeriods = [period,"antonionisch"]
         const periodSelection = periods && periods.length>0
                                 ? `AND facet_datierungepoche:("${periods.join('" OR "')}")`
                                 : "";
@@ -206,7 +202,8 @@ class EntityAPI extends RESTDataSource {
             q: `${searchStr} ${catalog} ${typesFilter} ${focusOnAfrica} ${periodSelection}`
         }
         if(coordinates&&coordinates.length===4) params['bbox']= coordinates;
-        //if(period&&period!=="") params['fq']= `facet_datierungepoche:${period}`; //"facet_datierungepoche:antoninisch"
+        //if(period&&period!=="") params['fq']= `facet_datierungepoche:${period}`;
+
         const response = await this.get( 'search', params);
         const entityIds = response.size > 0
             ? response.entities.map( entity => entity.entityId)

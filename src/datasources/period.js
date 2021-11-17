@@ -17,12 +17,12 @@ class PeriodAPI extends RESTDataSource {
             title: period.resource.names[language] ? period.resource.names[language][0] : Object.values(period.resource.names)[0][0],
             begin: period.resource.hasTimespan
                     && period.resource.hasTimespan[0].begin
-                ? period.resource.hasTimespan[0].begin.at
+                ? period.resource.hasTimespan[0].begin.at || period.resource.hasTimespan[0].begin.notBefore
                 : "",
             end: period.resource.hasTimespan
                     && period.resource.hasTimespan[0].end
-                    && period.resource.hasTimespan[0].end.at
-                ? period.resource.hasTimespan[0].end.at
+                    //&& period.resource.hasTimespan[0].end.at
+                ? period.resource.hasTimespan[0].end.at || period.resource.hasTimespan[0].end.notAfter
                 : "",
             coreAreaIds: period.resource.hasCoreArea && period.resource.hasCoreArea.map( gazetteerURI => gazetteerURI.substr(-7) ),
             types: period.resource.types && period.resource.types,
